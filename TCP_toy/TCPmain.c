@@ -108,7 +108,7 @@ int main() {                                                // WSAStartup = WSA 
    // STEP 5
 
     char* request = "GET / HTTP/1.0\r\nHost: naver.com\r\n\r\n";  // 특별한 바이너리가 아니라 진짜 텍스트 규칙대로
-    int sendResult = send(sock, request, strlen(request), 0);  // 이 문자열을 (TCP에 연결된)소켓으로 전송
+    int sendResult = send(sock, request, (int)strlen(request), 0);  // 이 문자열을 (TCP에 연결된)소켓으로 전송
     if (sendResult == SOCKET_ERROR) {
         printf("전송 실패: %d\n", WSAGetLastError());
         closesocket(sock);
