@@ -74,8 +74,18 @@ int main() {                                                // WSAStartup = WSA 
     serverAddr.sin_port = htons(80);            // 구조체안에서 포트 번호를 저장하는 멤버임. htons 는 windowapi 함수(h = host, to = 변환, n = 네트워크, s = short) 
     serverAddr.sin_addr.s_addr = inet_pton("223.130.192.247"); 
 
-    WSACleanup();
-    return 0;
+  // STEP 4 : 연결하기 "Unlike Go , C 는 socket() 따로 connect() 따로 
+   int connectResult = connect(sock, (struct sockaddr*)&serverAddr, sizeof(serverAddr)); // connect () 반환값을 받을 변수, 성공하면 0 실패 하면 socket error // connect () 함수는 실제 TCP 연결 시작하는 함수 -> 이거 하면 3way handshake 
+                                                                                         // 이 함수의 인자값 -> (우리가 만든 소켓, 서버 주소 정보<sockaddr 타입으로 변환>, 구조체 크기) connect(SOCKET, const struct sockaddr*, int) 
+                                                                                                                // 위에서 형 변환 하는 이유가 우리가 만든건 sockaddr_in 타입인데 sockaddr* 로 바꾼게 sockaddr_in <IPv4 전용 구조체>, IP 포트 설정 편함.
+                                                                                                                // 근데 이걸 먼저 써서 sin_port 나 sin_addr 를 받고 sockaddr* 로 변환해서 IPv4 이던 IPv6이던 받게함.
+    if (connectResult == SOCKET_ERROR) {
+        printf("연결 실패: %d\n", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        return 1;
+    }
+    printf("네이버 연결 성공!\n");
 }
 
 
