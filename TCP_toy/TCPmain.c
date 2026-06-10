@@ -35,21 +35,36 @@
     //                                       -> .lib 파일은 바이너리 파일이여서 include 안됨. 부품임 link(연결) 해야 하는 부품.
 
 
-int main() {
+int main() {                                                // WSAStartup = WSA (Windows Sockets API) + Startup(시작/초기화)
+    // 이 초기화를 하면 (WSAStartup을 호출하면 ws2_32.dll 내부 준비하고, 소켓을 쓸 준비함
+    // wsaData에 시스템 정보를 채워줌 
     WSADATA wsaData;                                        // winsock 시스템 정보 담는 구조체
     int result = WSAStartup(MAKEWORD(2, 2), &wsaData);      // winsock 2.2 버전으로 initialize. 그리고 & 여기에 주소 전달
-                                                            // wsaData 안에 저장되는 것들 -> winsock 버전 정보, 시스템이 지원하는 최대 소켓 수 등 
-                                                            // MAKEWORD 는 winsock 최신 버전 써달라는 매크로 함수임 
+    // wsaData 안에 저장되는 것들 -> winsock 버전 정보, 시스템이 지원하는 최대 소켓 수 등 
+    // MAKEWORD 는 winsock 최신 버전 써달라는 매크로 함수임 
     if (result != 0) {
         printf("WSAStartup 실패: %d\n", result);
         return 1;
     }
-    printf("Winsock 초기화 성공!\n");
+    printf("Winsock 초기화 성공!\n");                        /*
+                                                         이 코드가 하는 일 : windows 한테 나 소켓 쓸거니까 준비해줘(by WSAStartup- W api 함수 호출하며)
+                                                         성공하면 초기화 성공이고 실패하면 에러 출력
+                                                        */
+                                                        // STEP 2 : 소켓 생성 
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);     // socket() 함수는 파라미터가 3개인데, AF는 Address family (주소 체계)이고 INET은 internet
+                                                       // 그래서 AF_INET은 IPv4 주소 체계이고 (AF_INET6는 IPv6), SOCK_STREAM은 스트림 방식을 TCP 를 쓴다는것임. SOCK_DGRAM은 UDP, 마지막 인자 0 은 프로토콜 번호임 
+    if (sock == INVALID_SOCKET) {           // 그냥 nil 같은 거임 
+        printf("소켓 생성 실패: %d\n", WSAGetLastError());  // GO에서는 err.Error()로 바로 에러 메세지 나오지만, C에서는 숫자로 나오고 GetLastError 를 써야함 
+        WSACleanup();
+        return 1;
+    }
+    printf("소켓 생성 성공! ");
 
     WSACleanup();
     return 0;
-}                                                       /*
-                                                         이 코드가 하는 일 : windows 한테 나 소켓 쓸거니까 준비해줘
-                                                         성공하면 초기화 성공이고 실패하면 에러 출력       
-                                                        */
-                                                         
+}
+
+
+
+
+                                              
