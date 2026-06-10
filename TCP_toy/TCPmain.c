@@ -25,10 +25,4 @@
     closesocket()       7. 소켓 닫기
     WSACleanup          8. 정리 
                                                                            
-                                                                           
-                                                                           
-                                                                           
-                                                                           
-                                                                           
-                                                                           
                                                                            */
