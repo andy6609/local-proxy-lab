@@ -65,6 +65,14 @@ int main() {                                                // WSAStartup = WSA 
 
   // STEP 3:서버 주소 설정
     struct sockaddr_in serverAddr;                  // 인터넷 주소 정보 담는 구조체 선언
+    /*
+     이 구조체 안에 있는것들
+     serverAddr
+    ├── sin_family   → 주소 체계
+    ├── sin_port     → 포트 번호
+    └── sin_addr     → IP 주소 ← 여기!
+          └── s_addr → 실제 IP 숫자
+    */
     memset(&serverAddr, 0, sizeof(serverAddr));     // 메모리를 특정 값으로 채우는 C언어 함수인데(winsock2.h 가 string.h를 포함하고 있어서)  , serverAddr 변수 메모리 주소를 0 으로 해라. 안하면 쓰레기 값 채워지니까. 3번째 인자에 sizeof 를 쓰는건  이거 대신에 999 이렇게 넣으면 serverAddr 를 넘어서 다른 값까지 0으로 덮어씌워버릴 수도 있음.
     serverAddr.sin_family = AF_INET;                // sin_family는 우리가 sockaddr_n 구조체로 만들어졌으니까 그 안에 있는 멤버 변수이구요. sin 은 socket internet 그리고 family 는 주소 체계 종류 임"어떤 주소 체계 쓸지.
     /*/ go 언어에서는 net.Dial("tcp", "223.130.200.104:80")
@@ -72,7 +80,17 @@ int main() {                                                // WSAStartup = WSA 
 //                        IPv4 주소 형식이면 자동으로 AF_INET
 //                        Go가 내부적으로 sin_family 설정해줌*/
     serverAddr.sin_port = htons(80);            // 구조체안에서 포트 번호를 저장하는 멤버임. htons 는 windowapi 함수(h = host, to = 변환, n = 네트워크, s = short) 
-    serverAddr.sin_addr.s_addr = inet_pton("223.130.192.247"); 
+    inet_pton(AF_INET, "223.130.192.247", &serverAddr.sin_addr);
+    /* ient_pton 에 대해서 알아보자..... -> 일단 Winsock API 함수임!!! 
+    
+    "internet , presentation, to , network 인데" 사람이 있는 ip 문자열을 컴터가 읽는 숫자로 변환하기야. 사람이 읽는 ip 는 숫자이고 컴터가 읽는 ip 는 0xDF82COF7 이런 느낌인데, 16진수니까 메모리에 4바이트로 저장됨. 네트워in크로 전송할때는 문자열 말고 숫자형식이 필요함
+
+    int inet_pton(int af, const char*src, void*dst);
+                  주소 체계, 입력(문자열 IP), 출력(숫자IP 저장할 곳)
+
+     serverAddr.sin_addr.s_addr = inet_pton(""); <- 전에 이렇게 적었었는데 잘못된 코드 였음. 
+    */
+    
 
   // STEP 4 : 연결하기 "Unlike Go , C 는 socket() 따로 connect() 따로 
    int connectResult = connect(sock, (struct sockaddr*)&serverAddr, sizeof(serverAddr)); // connect () 반환값을 받을 변수, 성공하면 0 실패 하면 socket error // connect () 함수는 실제 TCP 연결 시작하는 함수 -> 이거 하면 3way handshake 
