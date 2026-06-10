@@ -116,6 +116,38 @@ int main() {                                                // WSAStartup = WSA 
         return 1;
     }
     printf("HTTP 요청 전송 성공!\n");
+
+
+   // STEP 6 : 받을 공간 만들어 놓고 memset 으로 0 으로 초기화 하고 데이터 받고 출력 
+
+    char buffer[4096];        // char 는 1바이트, 그리고 buffer는 변수명이다. [4096]은 char 4096개 짜리 배열. 4096칸짜리 메모리 선언이다
+                                // char 가 1바이트이니 4096바이트이다. 이는 4KB 이다. 1024가 1KB 이기 때문이다.
+                                // 여기서 char 로 쓰는 이유 : HTTP 통신이 텍스트 기반이라서 아스키 코드로 된 문자들이 들어옴. -> 고로 이건 char 로 들어옴 
+    memset(buffer, 0, sizeof(buffer));
+    int recvResult = recv(sock, buffer, sizeof(buffer) - 1, 0); // 여기에서 왜 버퍼 사이즈 - 1을 하는지? 그리고 플래그는 왜 0 인지? 플래그 종류가 3개 있는데 0 은 "아무 옵션 없이 그냥 받기" 임
+                                // -1 을 하는 이유는 문자열이 마지막에 언제 끝나는지 모르기 때문에 마지막 자리는 \0 로 남겨둬야 해서 4095 바이트만 받는.?
+    
+    if (recvResult == SOCKET_ERROR) {
+        printf("수신 실패: %d", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        return 1;
+    }
+
+    printf("응답 받음: %s", buffer);  // 메모리 공간 맞는데 왜 %s를 쓰냐? -> 이게 char 배열이라서 문자들이 연속으로 저장됨 
+                                       // Go 랑 비교를 하자면, buf := make([]byte,4096) ; string(buf[:n])
+
+    closesocket(sock);
+    WSACleanup();
+    return 0;
+
+    /*
+    Go 랑 비교를 좀 하자면
+    n, _ := conn.Read(buf)
+        # 플래그 같은 거 없음
+        # Go가 알아서 처리
+        # 0 같은 거 신경 안 써도 됨
+    */
 }
 
 
