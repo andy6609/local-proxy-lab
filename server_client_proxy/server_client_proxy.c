@@ -74,7 +74,7 @@ void RunServer() {
 
 	printf(" 서버 18080 포트가 열렸음. 전화를 기다리겠음... (Blocking)\n");
 
-	SOCKET clientSock = accept(listenSock, NULL, NULL); // accept 함수는 대기 상태인 소켓에서 클라이언트의 연결 요청을 수락하는 함수임. 첫 번째 인자는 대기 상태인 소켓 디스크립터이고, 두 번째와 세 번째 인자는 클라이언트의 주소 정보를 저장할 버퍼와 그 크기를 나타내는 포인터임. 여기서는 클라이언트의 주소 정보가 필요 없으므로 NULL로 설정함. 이 함수가 성공하면 새로 생성된 소켓 디스크립터를 반환하고, 실패하면 INVALID_SOCKET을 반환함.
+	SOCKET clientSock = accept(listenSock, NULL, NULL); // accept 함수는 대기 상태인 소켓에서 클라이언트의 연결 요청을 수락하는 함수임. 첫 번째 인자는 대기 상태인 소켓 디스크립터이고, 두 번째와 세 번째 인자는 클라이언트의 주소 정보를 저장할 버퍼와 그 크기를 나타내는 포인터임. 여기서는 클라이언트의 주소 정보가 필요 없으므로 NULL로 설정함. accept 에 대해서 오해를 풀자면 얘는 두가지 일을 동시에 함. 1. 어 대기큐에서 꺼내서 실제 연결을 한다. 2. 그 연결을 위한 소켓을 새로 만들어서 반환한다. (이때 반환되는 소켓은 listenSock과는 다른 소켓임. listenSock은 계속 대기 상태로 남아있고, clientSock은 실제 연결된 소켓임.) 그래서 socket() 함수는 한번 쓰였는데 소켓은 2개임.
 	if (clientSock == INVALID_SOCKET) {
 		printf("accept failed: %d\n", WSAGetLastError());
 		closesocket(listenSock);
