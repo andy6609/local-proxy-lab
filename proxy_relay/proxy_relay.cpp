@@ -134,7 +134,7 @@ void HandleClient(SOCKET clientSock) {
     // 3. 도메인 이름 -> IP 변환 (DNS 조회)
     //    "httpbin.org" 같은 문자열은 connect 에 바로 못 씀 -> 숫자 주소로 바꿔야 함.
     //    getaddrinfo 는 hints(원하는 조건)를 받아 결과를 serverInfo 에 채워줌.
-    struct addrinfo hints;
+    struct addrinfo hints; // 빈 주문서 만들고
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;       // IPv4
     hints.ai_socktype = SOCK_STREAM; // TCP
@@ -144,7 +144,16 @@ void HandleClient(SOCKET clientSock) {
         printf("[프록시] DNS 조회 실패: %s\n", host);
         closesocket(clientSock);
         return;
-    }
+    }// 함수가 복사본을 바꿔도 원본은 안 바뀌기 때문에, getaddrinfo 가 serverinfo 의 복사본을 바꾸면 안돰. 직접바꿔서 결과를 채워줘야함.
+
+    // [&serverInfo 에 & 가 또 붙는 이유 정리]
+    // serverInfo 는 원래 NULL 인 '빈 화살표(포인터)'임. 아무것도 안 가리키고 있음.
+    // getaddrinfo 가 결과 박스를 자기가 직접 만들어주고 나서, "serverInfo야 이제 이 박스를 가리켜라" 하고
+    // 이 화살표의 방향 자체를 바꿔줘야함. 근데 함수한테 그냥 serverInfo(화살표 값)만 넘기면 '복사본'이 넘어가서,
+    // getaddrinfo 가 복사본을 바꿔봤자 내 진짜 serverInfo 는 계속 NULL 임 -> 결과를 못 받음.
+    // 그래서 화살표 자체를 바꾸라고 시키려면 그 화살표가 '놓인 위치(주소)' 인 &serverInfo 를 넘겨야함.
+    // 정리: "원본을 바꾸려면 주소(&)를 넘긴다" 라는 규칙이 포인터한테 적용되면 &포인터(=&serverInfo) 가 되는거임.
+    // 그래서 호출 끝나면 serverInfo 는 더이상 NULL 이 아니라 결과 박스를 가리키고 있어서, 밑에서 serverInfo->ai_addr 이런식으로 꺼내 씀.
 
     // 4. 진짜 서버로 가는 '새 소켓'(upstream) 만들고 연결
     //    -> 여기서부터 프록시가 '클라이언트' 역할을 함 (진짜 서버한테 전화 거는 쪽)
