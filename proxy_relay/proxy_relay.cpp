@@ -20,6 +20,10 @@ Host 를 뽑는 함수 (paseHost)
 이제 리얼 scenario 로 가기 때문에
 크롬 브라우저 -> 내 프록시(RunServer) -> 진짜 서버(httpbin.org)
 이제 이 프록시 파일은 서버 이자 클라이언트 역할을 한다~
+
+근데 우리는 curl 명령어로 진행
+
+나 → curl → 우리 프록시 → httpbin.org
 */
 
 
@@ -87,7 +91,7 @@ void RunServer() {
 bool parseHost(const char* request, char* outHost, int outHostSize) {
     // 1. 요청 문자열(request) 안에서 "Host:" 가 시작하는 위치를 찾는다.
     //    strstr = 큰 문자열 안에서 특정 단어가 어디 있는지 찾아 그 위치(포인터)를 돌려줌. 없으면 NULL.
-    const char* p = strstr(request, "Host:");
+    const char* p = strstr(request, "Host:"); // strstr 은 c 의 string 안의 string 찾기
     if (p == NULL) return false; // Host 헤더가 없으면 실패
 
     p += 5;                // "Host:" 5글자만큼 포인터를 앞으로 밀어 -> 값 바로 앞으로 이동
@@ -146,7 +150,7 @@ void HandleClient(SOCKET clientSock) {
         return;
     }// 함수가 복사본을 바꿔도 원본은 안 바뀌기 때문에, getaddrinfo 가 serverinfo 의 복사본을 바꾸면 안돰. 직접바꿔서 결과를 채워줘야함.
 
-    // [&serverInfo 에 & 가 또 붙는 이유 정리]
+    // [&serverInfo 에 & 가 또 붙는     이유 정리]
     // serverInfo 는 원래 NULL 인 '빈 화살표(포인터)'임. 아무것도 안 가리키고 있음.
     // getaddrinfo 가 결과 박스를 자기가 직접 만들어주고 나서, "serverInfo야 이제 이 박스를 가리켜라" 하고
     // 이 화살표의 방향 자체를 바꿔줘야함. 근데 함수한테 그냥 serverInfo(화살표 값)만 넘기면 '복사본'이 넘어가서,
