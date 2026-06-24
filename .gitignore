@@ -427,3 +427,10 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# proxy_v4 local MITM artifacts — never commit (private key / binaries / DLLs)
+proxy_v4/*.exe
+proxy_v4/*.dll
+proxy_v4/*.obj
+rootCA.key
+rootCA.crt
