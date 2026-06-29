@@ -387,6 +387,10 @@ static void HandleHttp(SOCKET clientSock, const char* preread, int prelen) {
         long long reqLen = 0;
         BodyMode reqMode = requestBodyMode(req, reqLen);
 
+        // Content-Type 으로 파일 업로드 가능성 1차 판별 (multipart/form-data)
+        std::string ctype = toLower(headerGet(req, "content-type"));
+        bool uploadHint = (ctype.find("multipart/form-data") != std::string::npos);
+
         SOCKET upstream = ConnectUpstream(host, port);
         if (upstream == INVALID_SOCKET) break;
         SockReader up(upstream);
@@ -410,7 +414,8 @@ static void HandleHttp(SOCKET clientSock, const char* preread, int prelen) {
         else if (respMode == BodyMode::Chunked)    up.forwardChunked(clientSock);
         else if (respMode == BodyMode::UntilClose) { up.forwardUntilClose(clientSock); serverClosed = true; }
 
-        printf("[http] %-6s %s%s -> %d\n", method.c_str(), host.c_str(), uri.c_str(), status);
+        printf("[http] %-6s %s -> %d%s\n", method.c_str(), uri.c_str(),
+               status, uploadHint ? "  [upload? multipart/form-data]" : "");
         closesocket(upstream);
 
         if (serverClosed || wantsClose(req) || wantsClose(resp)) break;
@@ -467,6 +472,7 @@ static void RunServer() {
 }
 
 int main() {
+    setvbuf(stdout, nullptr, _IONBF, 0);   // 로그 즉시 출력 (버퍼링 끄기)
     RunServer();
     return 0;
 }
