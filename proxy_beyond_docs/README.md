@@ -31,8 +31,8 @@
 |------|------|------|
 | `proxy_MITM_pure/proxy_MITM_pure.cpp` | **학습용 최소판** | 개념 이해용. **그대로 둔다(기능 안 얹음).** |
 | `proxy_v4/proxy_v4.cpp` | **연구 트랙 베이스** | 견고한 파서/인증서캐시+락/스머글링방어/타임아웃/keep-alive/구조화 로깅 |
-| `proxy_beyond/proxy_plan_A.cpp` | **연구 트랙 · Plan A** | v4 기반. 2026-07-13 생성. (아래 §4) |
-| `proxy_beyond/proxy_plan_B.cpp` | **연구 트랙 · Plan B** | nghttp2 h2 브릿지. 2026-07-13 생성. **빌드 미검증.** (아래 §4-B) |
+| `proxy_beyond/proxy_plan_A.cpp` | **연구 트랙 · Plan A** | v4 기반. 2026-07-13 생성. **✅ 빌드+실행 검증됨.** (아래 §4) |
+| `proxy_beyond/proxy_plan_B.cpp` | **연구 트랙 · Plan B** | nghttp2 h2 브릿지. 2026-07-13 생성. **빌드 미검증(nghttp2 미설치).** (아래 §4-B) |
 
 > 주의: "제품처럼 하드닝"과 "이력서용 견고함"은 다른 축. 후자는 유지, 전자(WFP/IOCP)는 지양.
 
@@ -65,9 +65,25 @@
    요청 body 를 상한(`UPLOAD_CAPTURE_CAP=256KB`)까지 캡처하며 전달 → `scanMultipart` 로 part별
    `name`/`filename`/`Content-Type` 추출 → `*** FILE UPLOAD DETECTED` 로그.
 
-**빌드/실행:** proxy_v4 와 동일. `rootCA.crt`/`rootCA.key` 준비 + OS 신뢰 등록 (`../docs/m4-mitm-setup.md`).
-테스트: `curl.exe --ssl-no-revoke -x http://127.0.0.1:18080 https://httpbin.org/get`,
-업로드 확인: `curl.exe --ssl-no-revoke -x http://127.0.0.1:18080 -F "file=@some.pdf" https://httpbin.org/post`
+**빌드 방법 (검증됨 2026-07-13):** proxy_v4 처럼 **VS 프로젝트가 아니라 cl.exe 커맨드라인**으로 빌드한다.
+OpenSSL 은 vcpkg(`C:\vcpkg\installed\x64-windows`), MSVC 는 VS2022 vcvars64.
+```
+call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat"
+cd proxy_beyond
+cl /nologo /EHsc /std:c++17 /utf-8 /I "C:\vcpkg\installed\x64-windows\include" proxy_plan_A.cpp ^
+   /link /LIBPATH:"C:\vcpkg\installed\x64-windows\lib"
+```
+(lib 이름은 코드의 `#pragma comment(lib,...)` 가 지정 → include/lib 경로만 주면 됨)
+
+**실행 준비:** exe 옆에 `rootCA.crt`/`rootCA.key` + OpenSSL DLL 3개(`libssl-3-x64.dll`, `libcrypto-3-x64.dll`,
+`legacy.dll`) 필요 → `proxy_v4/` 에서 복사해둠. OS 신뢰 등록은 `../docs/m4-mitm-setup.md`.
+
+**검증된 테스트 (둘 다 성공):**
+```
+curl.exe --ssl-no-revoke --cacert rootCA.crt -x http://127.0.0.1:18080 https://httpbin.org/get
+curl.exe --ssl-no-revoke --cacert rootCA.crt -x http://127.0.0.1:18080 -F "file=@hello.txt" https://httpbin.org/post
+```
+→ 복호화 평문 헤더 덤프 + `*** FILE UPLOAD DETECTED ... filename="hello.txt" type="text/plain"` 확인됨.
 
 **알려진 한계:**
 - ALPN 다운그레이드는 h2-only 클라(gRPC)엔 안 통함 → 세션1 실패 (Plan B 에서 해소).
@@ -105,3 +121,18 @@ Content-Encoding 미해제; QUIC 은 Plan C(별개).
 - QUIC: C-1(차단→폴백)까지냐 C-2(실제 복호화)까지냐 — **멘토 확인.**
 - 업로드 "100% 식별 가능한가" (TCP 분할로 단서 조각화) — 실제 캡처로 확인 후 파서 설계.
 - (미팅 노트의 애매한 표현들) "암호화된 파일이니까 DRM은 어차피 이걸 못 염"의 정확한 의미, "각 CLI마다 local 프록시" 의도 — 멘토 재확인.
+
+## 7. 개발 환경 결정 (2026-07-13)
+
+- **Hyper-V 위 깨끗한 Windows VM 에서 개발한다.**
+  - 이유: 호스트 Windows 에 **Fasoo DRM 이 깔려 파일이 투명 암호화**됨 → 개발/업로드파일 추출·검증(7~8주차)에 마찰.
+    VM 은 DRM 에이전트가 없는 clean 환경.
+  - **macOS(개인 맥) 는 안 씀.** 코드가 Windows 네이티브(WinSock2 등)라 POSIX 포팅이 필요하고,
+    **최종 타깃이 Windows(Fasoo/WFP)** 라 결국 되돌려야 함. + WFP 단계는 Windows 전용. Hyper-V 가 포팅 없이 맞음.
+- **VM 세팅 체크리스트 (검증된 호스트 빌드와 동일 재현):**
+  1. Hyper-V 에 Windows 10/11 VM
+  2. Git, **VS2022**(또는 MSVC Build Tools = cl.exe), **vcpkg** 설치
+  3. `vcpkg install openssl:x64-windows nghttp2:x64-windows` (nghttp2 는 Plan B 용)
+  4. `git clone https://github.com/andy6609/local-proxy-lab.git`
+  5. rootCA 생성(openssl CLI, `../docs/m4-mitm-setup.md`) + `certutil -addstore -user Root rootCA.crt`
+  6. 빌드: §4 의 cl.exe 커맨드. 실행 시 OpenSSL(+nghttp2) DLL 을 exe 옆에.
