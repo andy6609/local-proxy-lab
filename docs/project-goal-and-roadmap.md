@@ -61,6 +61,7 @@
   **Proxy Root CA를 클라 신뢰 저장소에 등록**해야 함(안 하면 `NET::ERR_CERT_AUTHORITY_INVALID`).
 - **Certificate Pinning:** 앱이 공개키/인증서를 고정 검증하면 OS가 Root CA 신뢰해도 **MITM 실패**(불가피 한계).
 - **MITM 한계:** pinning, 별도 trust store, **QUIC/HTTP3(UDP)**, HTTP/2 multiplexing, 대용량 streaming.
+  > ⚠️ 갱신(2026-07-13): **HTTP/2·QUIC(HTTP3)는 범위 안**(h2=Plan A→B, QUIC=Plan C). pinning은 여전히 불가·운영정책. 상세 `scope-and-protocol-coverage.md`.
 
 ---
 

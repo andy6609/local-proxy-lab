@@ -75,6 +75,7 @@
 - **[만들 것]** [AI] ClientHello **SNI 추출** → host용 **leaf 인증서 동적 생성+캐시** / [직접/이해] 세션1 복호화 →(M2 파서)평문 분석→ 세션2 재암호화 upstream, 응답 역방향 / [AI] 실패 시 raw fallback
 - **[설명·시연]** "https의 URL/Header/Body를 평문으로 확인. 핀닝 등 실패는 fallback/기록."
 - **[트레이드오프]** 인증서 생성 비용→캐시, **pinning/별도 trust store→MITM 실패(불가피)**, HTTP/2·QUIC·streaming 범위 밖
+  > ⚠️ 갱신(2026-07-13): **HTTP/2·QUIC(HTTP3)는 범위 안**으로 변경(h2=Plan A→B, QUIC=Plan C). 커버리지 계획은 `scope-and-protocol-coverage.md` 참조.
 - **[완료기준]** 핀닝 없는 대표 https에서 평문 요청/응답 확인 + 재암호화 정상 전달, 실패 로깅.
 
 ## M6 — 파일 업로드 행위 식별  · W7  ★본 과제 핵심

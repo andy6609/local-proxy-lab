@@ -1,0 +1,107 @@
+# proxy_beyond — 방향 & 결정 노트 (memory)
+
+> `proxy_beyond/` 트랙(연구용 프록시)의 **문맥·결정 기억**을 모아두는 곳.
+> 새 세션/다음 사람이 여기부터 읽으면 "왜 이렇게 가는지"를 안 흔들리고 잡을 수 있다.
+> 프로토콜 커버리지 **기준 문서**는 `../docs/scope-and-protocol-coverage.md`. (여긴 요약 + 트랙 노트)
+> 최종 갱신: 2026-07-13
+
+---
+
+## 1. 이 프로젝트가 뭔가 (성격)
+
+- **Fasoo 인턴 연구 PoC.** 목표 = **AI 서비스(ChatGPT/Gemini/네이버 등) 파일 업로드를 MITM 프록시로 식별.**
+- 배경: Fasoo **DRM**(문서 암호화 제품)/**Wrapsody** 맥락. "파일이 네트워크로 나갈 때 무엇이·어떤 등급/라벨로
+  나가는지"를 프록시로 관측·차단 가능한지 검증. (DRM이 API hook 시 파일을 읽는지 vs 네트워크로 나가는지도 확인)
+- **코드 성격 (중요):** 회사 제출·제품화 코드가 **아님.** 단, **이력서/포트폴리오로 공개할 코드**라
+  학습용 최소 코드도 아니고 **견고하게(solid)** 간다.
+- **이력서 핵심 = "파일 업로드를 식별해 (회사) 제품에 기능으로 추가했다."** TLS MITM·프로토콜 처리는 수단.
+- 멘토님 1순위 = **"전체를 처음부터 끝까지 설명할 수 있다."**
+
+### 견고함의 선 긋기
+- **유지(이력서 값어치):** v4 수준 파서 견고성·에러처리·자원정리·로깅·문서화된 한계.
+- **지양(풀 프로덕트/과잉):** WFP 커널통합, IOCP, fail-close 정책엔진, 분산 복호화 장비.
+
+---
+
+## 2. 코드 트랙 (어느 파일이 무엇인가)
+
+새 기능은 **연구 트랙(v4 계열)에만** 얹는다.
+
+| 파일 | 트랙 | 상태 |
+|------|------|------|
+| `proxy_MITM_pure/proxy_MITM_pure.cpp` | **학습용 최소판** | 개념 이해용. **그대로 둔다(기능 안 얹음).** |
+| `proxy_v4/proxy_v4.cpp` | **연구 트랙 베이스** | 견고한 파서/인증서캐시+락/스머글링방어/타임아웃/keep-alive/구조화 로깅 |
+| `proxy_beyond/proxy_plan_A.cpp` | **연구 트랙 · Plan A** | v4 기반. 2026-07-13 생성. (아래 §4) |
+| `proxy_beyond/proxy_plan_B.cpp` | **연구 트랙 · Plan B** | nghttp2 h2 브릿지. 2026-07-13 생성. **빌드 미검증.** (아래 §4-B) |
+
+> 주의: "제품처럼 하드닝"과 "이력서용 견고함"은 다른 축. 후자는 유지, 전자(WFP/IOCP)는 지양.
+
+---
+
+## 3. 프로토콜 커버리지 계획 (요약 — 상세는 scope 문서)
+
+- **HTTP/1.1** — 됨(v4 파서).
+- **HTTP/2** — **Plan A**(ALPN로 http/1.1 강제 다운그레이드, 지금) → **Plan B**(nghttp2로 실제 h2 파싱:
+  프레이밍+HPACK+스트림 멀티플렉싱, 나중). Plan A break = **gRPC/h2-only 클라 → handshake 실패**.
+- **HTTP/3(QUIC)** — **범위 안.** UDP+TLS1.3이라 TCP MITM으로 안 잡힘.
+  - **C-1**(UDP:443 차단→TCP 폴백, 권장 우선) / **C-2**(ngtcp2·quiche + QPACK 실제 복호화, 본격 확장)
+  - ★ **미결정:** C-1까지냐 C-2까지냐 → **멘토 확인 필요.**
+- **WFP 커널/transparent redirect** — 지금 **제외**(시간). local 견고화 후. 현재는 explicit proxy
+  (`curl -x`/브라우저 프록시설정)로 유도.
+
+> 옛 문서들(`execution-plan-to-mitm.md`, `project-goal-and-roadmap.md`, `main_purpose.md §8.3`, `m4-notes.md (A)`)의
+> "h2·QUIC 범위 밖" 서술은 `../docs/scope-and-protocol-coverage.md` 가 대체함(포인터 달아둠).
+
+---
+
+## 4. Plan A 구현 노트 (`proxy_beyond/proxy_plan_A.cpp`)
+
+**proxy_v4 대비 더한 것 3가지:**
+1. **ALPN로 h2→http/1.1 강제**
+   - 세션1(브라우저↔프록시): `SSL_CTX_set_alpn_select_cb` → 무조건 `http/1.1` 선택 (`alpnSelectHttp11`)
+   - 세션2(프록시↔서버): `SSL_set_alpn_protos` → `http/1.1`만 광고
+2. **Fiddler급 트래픽 가시화** — 요청/응답 전체 헤더 덤프 (`SHOW_FULL_HEADERS`, `dumpRequestView`/`dumpResponseView`)
+3. **파일 업로드 식별 시작(7주차 씨앗)** — `multipart/form-data` 감지 → boundary 추출 →
+   요청 body 를 상한(`UPLOAD_CAPTURE_CAP=256KB`)까지 캡처하며 전달 → `scanMultipart` 로 part별
+   `name`/`filename`/`Content-Type` 추출 → `*** FILE UPLOAD DETECTED` 로그.
+
+**빌드/실행:** proxy_v4 와 동일. `rootCA.crt`/`rootCA.key` 준비 + OS 신뢰 등록 (`../docs/m4-mitm-setup.md`).
+테스트: `curl.exe --ssl-no-revoke -x http://127.0.0.1:18080 https://httpbin.org/get`,
+업로드 확인: `curl.exe --ssl-no-revoke -x http://127.0.0.1:18080 -F "file=@some.pdf" https://httpbin.org/post`
+
+**알려진 한계:**
+- ALPN 다운그레이드는 h2-only 클라(gRPC)엔 안 통함 → 세션1 실패 (Plan B 에서 해소).
+- 업로드 캡처는 상한까지만 → 큰 body 뒤쪽 part 놓칠 수 있음.
+- **Content-Encoding(gzip/br) 압축 body 는 아직 해제 안 함** → 압축 본문 평문 스캔 불가 (다음 작업 후보).
+- upstream 인증서 검증 `SSL_VERIFY_NONE`(PoC).
+
+## 4-B. Plan B 구현 노트 (`proxy_beyond/proxy_plan_B.cpp`) — ★ 빌드 미검증
+
+**Plan A 와의 차이:** ALPN 에서 h2 를 **그대로 협상** → **nghttp2 로 실제 h2 파싱.** h2 아닌 클라는
+HTTP/1.1 경로로 자동 fallback(두 경로 다 지원).
+
+**구조 = h2-to-h2 리버스 프록시:**
+- `csess`(nghttp2 server, 브라우저측) ↔ `usess`(nghttp2 client, upstream측) 를 콜백으로 잇는다.
+- HPACK 해제/프레이밍/흐름제어는 **nghttp2 담당**. 우리는 `on_header`/`on_data_chunk`/`on_frame_recv`
+  로 헤더·DATA 를 받아 반대편 세션에 `submit_request`/`submit_response` + data provider 로 흘린다.
+- I/O: 두 SSL 소켓을 **non-blocking + select** 로 멀티플렉싱(`runH2Bridge`).
+- 업로드 식별: 요청 DATA(=`on_data_chunk`)를 `uploadCap` 에 캡처 → END_STREAM 시 `scanMultipart`.
+
+**빌드 추가 요건:** OpenSSL + **nghttp2**(`vcpkg install nghttp2:x64-windows`), `#pragma comment(lib,"nghttp2.lib")`,
+실행 시 `nghttp2.dll` 필요.
+
+**미검증/한계:** nghttp2 콜백 흐름·select 루프·data provider resume 타이밍은 **실트래픽 디버깅 필요**;
+h2↔1.1 **프로토콜 번역 미구현**(불일치 시 종료); H2Stream 은 브릿지 종료 시 일괄 free(장수명 연결 누적);
+Content-Encoding 미해제; QUIC 은 Plan C(별개).
+
+---
+
+## 5. 이번 주 필수 (2026-07-13 주)
+
+1. **Fiddler처럼 실제 트래픽 보이게** 코드 (→ Plan A §4-1,2 로 착수됨). 검증: **복호화가 Fiddler와 동일한가.**
+2. **(비암호화 기준) 파일 업로드 식별 리서치** — AI 창 업로드 시 TCP 스트림/트래픽 모양 조사, 서비스별 업로드 지문표.
+
+## 6. 열린 결정 (확인 필요)
+- QUIC: C-1(차단→폴백)까지냐 C-2(실제 복호화)까지냐 — **멘토 확인.**
+- 업로드 "100% 식별 가능한가" (TCP 분할로 단서 조각화) — 실제 캡처로 확인 후 파서 설계.
+- (미팅 노트의 애매한 표현들) "암호화된 파일이니까 DRM은 어차피 이걸 못 염"의 정확한 의미, "각 CLI마다 local 프록시" 의도 — 멘토 재확인.
