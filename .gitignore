@@ -432,5 +432,10 @@ FodyWeavers.xsd
 proxy_v4/*.exe
 proxy_v4/*.dll
 proxy_v4/*.obj
+
+# proxy_beyond local MITM artifacts — never commit (binaries / DLLs; obj/log already ignored globally)
+proxy_beyond/*.exe
+proxy_beyond/*.dll
+
 rootCA.key
 rootCA.crt
