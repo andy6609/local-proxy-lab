@@ -43,6 +43,12 @@
 #include <openssl/pem.h>
 #include <openssl/rand.h>
 
+// MSVC 에는 POSIX 의 ssize_t 가 없다. nghttp2.h 는 소비자 빌드에서 ssize_t 기반
+// 콜백 typedef(nghttp2_data_source_read_callback 등)를 그대로 컴파일하므로,
+// nghttp2 를 include 하기 전에 Windows SSIZE_T 로 정의해준다. (안 하면 헤더에서 C2065)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+
 #include <nghttp2/nghttp2.h>
 
 #include <string>
@@ -443,7 +449,7 @@ static bool isUploadRequest(const std::string& method, const std::string& conten
     boundaryOut = extractBoundary(contentType);
     return true;
 }
-static void dumpHeadView(const char* tag, const char* dir, const std::string& first,
+static void dumpHeadView(const char* tag, const std::string& dir, const std::string& first,
                          const std::vector<std::pair<std::string,std::string>>& headers) {
     if (!SHOW_FULL_HEADERS) return;
     std::string b;
