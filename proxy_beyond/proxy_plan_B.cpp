@@ -653,6 +653,15 @@ struct H2Bridge {
     H2Stream* newStream() { H2Stream* s = new H2Stream(); s->br = this; all.push_back(s); return s; }
 };
 
+// [debug] 응답 경로 계측 — 대상 호스트만 (노이즈 제거). 디버깅 끝나면 제거.
+static bool g_dbgH2 = true;
+static bool dbgHost(const H2Bridge* br) {
+    if (!g_dbgH2 || !br) return false;
+    const std::string& h = br->host;
+    return h.find("claude") != std::string::npos || h.find("wikipedia") != std::string::npos ||
+           h.find("httpbin") != std::string::npos;
+}
+
 // nghttp2 nv 빌더
 static nghttp2_nv mkNv(const std::string& name, const std::string& value) {
     nghttp2_nv nv;
@@ -686,13 +695,21 @@ static ssize_t respBodyRead(nghttp2_session*, int32_t, uint8_t* buf, size_t leng
                             uint32_t* data_flags, nghttp2_data_source* source, void*) {
     H2Stream* s = (H2Stream*)source->ptr;
     if (s->respBody.empty()) {
-        if (s->respEof) { *data_flags |= NGHTTP2_DATA_FLAG_EOF; return 0; }
+        if (s->respEof) {
+            *data_flags |= NGHTTP2_DATA_FLAG_EOF;
+            if (dbgHost(s->br)) logMsg("[dbg] respBodyRead cid=" + std::to_string(s->cid) + " -> EOF");
+            return 0;
+        }
+        if (dbgHost(s->br)) logMsg("[dbg] respBodyRead cid=" + std::to_string(s->cid) + " -> DEFERRED");
         return NGHTTP2_ERR_DEFERRED;
     }
     size_t n = (std::min)(length, s->respBody.size());
     memcpy(buf, s->respBody.data(), n);
     s->respBody.erase(0, n);
-    if (s->respBody.empty() && s->respEof) *data_flags |= NGHTTP2_DATA_FLAG_EOF;
+    bool eof = s->respBody.empty() && s->respEof;
+    if (eof) *data_flags |= NGHTTP2_DATA_FLAG_EOF;
+    if (dbgHost(s->br)) logMsg("[dbg] respBodyRead cid=" + std::to_string(s->cid) + " sent=" + std::to_string(n) +
+                               " left=" + std::to_string(s->respBody.size()) + (eof ? " +EOF" : ""));
     return (ssize_t)n;
 }
 
@@ -714,6 +731,12 @@ static void submitUpstreamRequest(H2Bridge* br, H2Stream* s, bool hasBody) {
     s->uid = uid; s->reqSubmitted = true;
     br->byUpstream[uid] = s;
 
+    if (dbgHost(br)) {
+        logMsg("[dbg] submitUpstreamRequest uid=" + std::to_string(uid) +
+               " :method=" + s->method + " :scheme=" + scheme + " :authority=" + authority + " :path=" + s->path);
+        for (auto& kv : s->reqHdr) logMsg("[dbg]   reqhdr  " + kv.first + ": " + kv.second);
+    }
+
     dumpHeadView("MITM/h2", ">> REQUEST", s->method + " " + br->host + s->path, s->reqHdr);
 }
 // upstream 응답 헤더 완성 → 브라우저로 응답 제출
@@ -725,6 +748,9 @@ static void submitClientResponse(H2Bridge* br, H2Stream* s, bool hasBody) {
 
     nghttp2_data_provider prd; prd.source.ptr = s; prd.read_callback = respBodyRead;
     int rv = nghttp2_submit_response(br->csess, s->cid, nva.data(), nva.size(), hasBody ? &prd : nullptr);
+    if (dbgHost(br)) logMsg("[dbg] submitClientResponse cid=" + std::to_string(s->cid) + " status=" + st +
+                            " hasBody=" + std::to_string(hasBody) + " nhdr=" + std::to_string(s->respHdr.size()) +
+                            " rv=" + std::to_string(rv) + (s->respSubmitted ? " (ALREADY SUBMITTED!)" : ""));
     if (rv != 0) { logMsg("submit_response fail: " + std::string(nghttp2_strerror(rv))); return; }
     s->respSubmitted = true;
 
@@ -774,6 +800,16 @@ static int cb_on_frame_recv(nghttp2_session* session, const nghttp2_frame* frame
     int32_t sid = frame->hd.stream_id;
     bool endStream = (frame->hd.flags & NGHTTP2_FLAG_END_STREAM) != 0;
 
+    if (dbgHost(br)) {
+        std::string extra;
+        if (frame->hd.type == NGHTTP2_RST_STREAM) extra = " RST err=" + std::to_string(frame->rst_stream.error_code);
+        else if (frame->hd.type == NGHTTP2_GOAWAY) extra = " GOAWAY err=" + std::to_string(frame->goaway.error_code) +
+                 " lastsid=" + std::to_string(frame->goaway.last_stream_id);
+        logMsg(std::string("[dbg] frame side=") + (session == br->csess ? "C(browser)" : "U(upstream)") +
+               " type=" + std::to_string((int)frame->hd.type) + " sid=" + std::to_string(sid) +
+               " end=" + std::to_string(endStream) + extra);
+    }
+
     if (session == br->csess) {
         // 브라우저측
         if (frame->hd.type == NGHTTP2_HEADERS && frame->headers.cat == NGHTTP2_HCAT_REQUEST) {
@@ -800,11 +836,18 @@ static int cb_on_frame_recv(nghttp2_session* session, const nghttp2_frame* frame
         if (frame->hd.type == NGHTTP2_HEADERS) {
             H2Stream* s = br->byUpstream.count(sid) ? br->byUpstream[sid] : nullptr;
             if (!s) return 0;
+            if (dbgHost(br)) logMsg("[dbg] upstream HEADERS uid=" + std::to_string(sid) +
+                                    " cat=" + std::to_string((int)frame->headers.cat) +
+                                    " status=" + std::to_string(s->status) + " end=" + std::to_string(endStream));
             if (endStream) s->respEof = true;
             submitClientResponse(br, s, !endStream);
         } else if (frame->hd.type == NGHTTP2_DATA && endStream) {
             H2Stream* s = br->byUpstream.count(sid) ? br->byUpstream[sid] : nullptr;
-            if (s) { s->respEof = true; if (s->cid >= 0) nghttp2_session_resume_data(br->csess, s->cid); }
+            if (s) {
+                if (dbgHost(br)) logMsg("[dbg] upstream DATA END uid=" + std::to_string(sid) +
+                                        " respBody=" + std::to_string(s->respBody.size()));
+                s->respEof = true; if (s->cid >= 0) nghttp2_session_resume_data(br->csess, s->cid);
+            }
         }
     }
     return 0;
@@ -824,6 +867,8 @@ static int cb_on_data_chunk(nghttp2_session* session, uint8_t, int32_t sid,
         H2Stream* s = br->byUpstream.count(sid) ? br->byUpstream[sid] : nullptr;
         if (!s) return 0;
         s->respBody.append((const char*)data, len);
+        if (dbgHost(br)) logMsg("[dbg] upstream DATA uid=" + std::to_string(sid) + " +" + std::to_string(len) +
+                                " respBody=" + std::to_string(s->respBody.size()) + " cid=" + std::to_string(s->cid));
         if (s->cid >= 0) nghttp2_session_resume_data(br->csess, s->cid);
     }
     return 0;
@@ -871,11 +916,12 @@ static nghttp2_session_callbacks* makeCallbacks(bool isServerSide) {
 }
 
 // SSL 소켓에서 읽어 nghttp2 로 먹인다. 반환 false = 세션 종료.
-static bool pumpRecv(SSL* ssl, nghttp2_session* sess, bool& closed) {
+static bool pumpRecv(SSL* ssl, nghttp2_session* sess, bool& closed, const H2Bridge* br = nullptr, const char* side = "") {
     char buf[IO_CHUNK];
     for (;;) {
         int n = SSL_read(ssl, buf, sizeof(buf));
         if (n > 0) {
+            if (dbgHost(br)) logMsg(std::string("[dbg] pumpRecv ") + side + " read=" + std::to_string(n));
             ssize_t rv = nghttp2_session_mem_recv(sess, (const uint8_t*)buf, (size_t)n);
             if (rv < 0) { logMsg(std::string("mem_recv: ") + nghttp2_strerror((int)rv)); return false; }
             continue;
@@ -932,10 +978,10 @@ static void runH2Bridge(H2Bridge* br) {
         if (r == SOCKET_ERROR) break;
 
         if (FD_ISSET(br->csock, &rfds)) {
-            if (!pumpRecv(br->cssl, br->csess, br->cClosed)) break;
+            if (!pumpRecv(br->cssl, br->csess, br->cClosed, br, "C(browser)")) break;
         }
         if (FD_ISSET(br->usock, &rfds)) {
-            if (!pumpRecv(br->ussl, br->usess, br->uClosed)) break;
+            if (!pumpRecv(br->ussl, br->usess, br->uClosed, br, "U(upstream)")) break;
         }
         // 송신은 루프 상단에서 flush
     }
