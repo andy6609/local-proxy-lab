@@ -437,5 +437,11 @@ proxy_v4/*.obj
 proxy_beyond/*.exe
 proxy_beyond/*.dll
 
+# proxy_ToInfinity local artifacts — never commit (CMake build tree / binaries / captured uploads)
+proxy_ToInfinity/build/
+proxy_ToInfinity/captured_files/
+proxy_ToInfinity/*.exe
+proxy_ToInfinity/*.dll
+
 rootCA.key
 rootCA.crt

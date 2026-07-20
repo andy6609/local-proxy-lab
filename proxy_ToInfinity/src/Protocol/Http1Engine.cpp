@@ -24,6 +24,19 @@ static void trim(std::string& s) {
     while (e > b && (s[e - 1] == ' ' || s[e - 1] == '\t')) e--;
     s = s.substr(b, e - b);
 }
+// 안전한 정수 파싱 (std::stoll/stoi 는 비정상 입력에 예외를 던져 detached 스레드를 죽인다).
+// 순수 10진수만 허용, 실패 시 false. (선행 공백/탭은 무시)
+static bool parseLL(const std::string& in, long long& out) {
+    std::string t = in; trim(t);
+    if (t.empty()) return false;
+    long long v = 0;
+    for (char c : t) {
+        if (c < '0' || c > '9') return false;
+        v = v * 10 + (c - '0');
+        if (v > (1LL << 40)) return false;
+    }
+    out = v; return true;
+}
 
 class Stream {
 public:
@@ -129,9 +142,11 @@ public:
     }
 
     bool forwardUntilClose(Stream* dest, std::string* cap = nullptr) {
+        const size_t CAP = 256 * 1024;   // 응답 캡처 상한 (무제한 축적 방지)
         if (off < buffer.size()) {
-            if (!dest->writeAll(buffer.data() + off, buffer.size() - off)) return false;
-            if (cap) cap->append(buffer.data() + off, buffer.size() - off);
+            size_t avail = buffer.size() - off;
+            if (!dest->writeAll(buffer.data() + off, avail)) return false;
+            if (cap && cap->size() < CAP) cap->append(buffer.data() + off, (std::min)(avail, CAP - cap->size()));
             off = buffer.size(); compact();
         }
         char tmp[IO_CHUNK];
@@ -139,7 +154,7 @@ public:
             int n = src->read(tmp, sizeof(tmp));
             if (n <= 0) break;
             if (!dest->writeAll(tmp, (size_t)n)) return false;
-            if (cap) cap->append(tmp, (size_t)n);
+            if (cap && cap->size() < CAP) cap->append(tmp, (std::min)((size_t)n, CAP - cap->size()));
         }
         return true;
     }
@@ -227,7 +242,7 @@ static BodyMode requestBodyMode(const HttpHead& h, long long& clen) {
     std::string cl = headerGet(h, "content-length");
     std::string te = toLower(headerGet(h, "transfer-encoding"));
     if (!te.empty() && te.find("chunked") != std::string::npos) return BodyMode::Chunked;
-    if (!cl.empty()) { clen = std::stoll(cl); return BodyMode::Length; }
+    if (!cl.empty() && parseLL(cl, clen)) return BodyMode::Length;
     return BodyMode::None;
 }
 
@@ -236,7 +251,7 @@ static BodyMode responseBodyMode(const HttpHead& h, int status, long long& clen)
     std::string te = toLower(headerGet(h, "transfer-encoding"));
     if (!te.empty() && te.find("chunked") != std::string::npos) return BodyMode::Chunked;
     std::string cl = headerGet(h, "content-length");
-    if (!cl.empty()) { clen = std::stoll(cl); return BodyMode::Length; }
+    if (!cl.empty() && parseLL(cl, clen)) return BodyMode::Length;
     return BodyMode::UntilClose;
 }
 
@@ -278,7 +293,8 @@ void Http1Engine::process(Context& ctx) {
     std::string hp = connReq.startLine.substr(s1 + 1, s2 - s1 - 1);
     size_t c = hp.find(':');
     ctx.targetHost = hp.substr(0, c);
-    ctx.targetPort = (c != std::string::npos) ? std::stoi(hp.substr(c + 1)) : 443;
+    ctx.targetPort = 443;
+    if (c != std::string::npos) { long long p; if (parseLL(hp.substr(c + 1), p) && p > 0 && p < 65536) ctx.targetPort = (int)p; }
 
     // CONNECT 성공 응답 (이걸 받아야 클라가 ClientHello 를 보냄)
     plainSock.writeAll("HTTP/1.1 200 Connection Established\r\n\r\n", 39);
@@ -343,18 +359,19 @@ void Http1Engine::process(Context& ctx) {
 
         size_t methodEnd = req.startLine.find(' ');
         std::string method = req.startLine.substr(0, methodEnd);
-        
+        // 요청 라인에서 경로(URI)도 뽑는다 — 분석기 라우팅/서비스 지문(예: /backend-api/files)용
+        std::string reqUri = "/";
+        if (methodEnd != std::string::npos) {
+            size_t uriEnd = req.startLine.find(' ', methodEnd + 1);
+            reqUri = req.startLine.substr(methodEnd + 1,
+                        (uriEnd == std::string::npos ? req.startLine.size() : uriEnd) - (methodEnd + 1));
+        }
+
         long long reqLen = 0;
         BodyMode reqMode = requestBodyMode(req, reqLen);
         
-        // [Phase 5] 압축 회피: 클라이언트의 Accept-Encoding 헤더를 지워서 서버가 평문 응답을 보내게 함
-        for (auto it = req.headers.begin(); it != req.headers.end(); ) {
-            if (toLower(it->first) == "accept-encoding") {
-                it = req.headers.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        // [9번] 이전엔 Accept-Encoding 을 지워 압축을 '회피'했으나, 이제 그대로 두고
+        //       응답을 실제로 해제한다(analyzeResponse 의 decodeBody). 클라로는 압축 그대로 전달.
 
         std::string reqBodyCap;
         std::string* reqCapPtr = &reqBodyCap; // 항상 캡처하여 TrafficAnalyzer에 전달
@@ -365,8 +382,8 @@ void Http1Engine::process(Context& ctx) {
         if (reqMode == BodyMode::Length) { if (!cReader.forwardExact((size_t)reqLen, &upstreamStream, reqCapPtr)) break; }
         else if (reqMode == BodyMode::Chunked) { if (!cReader.forwardChunked(&upstreamStream, reqCapPtr)) break; }
 
-        // [연구 영역] 분석기 호출
-        TrafficAnalyzer::analyzeRequest(method, ctx.targetHost, headOut, reqBodyCap);
+        // [연구 영역] 분석기 호출 (url 인자에는 host 가 아니라 요청 경로를 넘긴다)
+        TrafficAnalyzer::analyzeRequest(method, reqUri, headOut, reqBodyCap);
 
         // 응답 수신
         HttpHead resp;
@@ -374,7 +391,12 @@ void Http1Engine::process(Context& ctx) {
         
         int status = 0;
         size_t sStart = resp.startLine.find(' ');
-        if (sStart != std::string::npos) status = std::stoi(resp.startLine.substr(sStart + 1));
+        if (sStart != std::string::npos) {
+            size_t sEnd = resp.startLine.find(' ', sStart + 1);
+            std::string st = resp.startLine.substr(sStart + 1,
+                                (sEnd == std::string::npos ? resp.startLine.size() : sEnd) - (sStart + 1));
+            long long sv; if (parseLL(st, sv)) status = (int)sv;
+        }
 
         long long respLen = 0;
         BodyMode respMode = responseBodyMode(resp, status, respLen);

@@ -5,8 +5,62 @@
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <zlib.h>
+#include <brotli/decode.h>
 
 namespace proxy {
+
+// ============================================================
+//  Content-Encoding 실해제 (gzip/deflate=zlib, br=brotli)
+//  캡처 상한으로 스트림이 잘려도 여기까지 풀린 평문은 유효하다.
+// ============================================================
+static bool inflateGzipOrZlib(const std::string& in, std::string& out) {
+    if (in.empty()) return false;
+    z_stream zs{};
+    // windowBits = 15+32 → gzip(1f 8b)과 zlib(78 xx) 헤더를 자동 감지
+    if (inflateInit2(&zs, 15 + 32) != Z_OK) return false;
+    zs.next_in = (Bytef*)in.data();
+    zs.avail_in = (uInt)in.size();
+    char buf[16384];
+    int ret;
+    do {
+        zs.next_out = (Bytef*)buf;
+        zs.avail_out = sizeof(buf);
+        ret = inflate(&zs, Z_NO_FLUSH);
+        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) { inflateEnd(&zs); return !out.empty(); }
+        out.append(buf, sizeof(buf) - zs.avail_out);
+    } while (zs.avail_out == 0 && ret != Z_STREAM_END);
+    inflateEnd(&zs);
+    return !out.empty();
+}
+static bool brotliDecompress(const std::string& in, std::string& out) {
+    if (in.empty()) return false;
+    BrotliDecoderState* st = BrotliDecoderCreateInstance(nullptr, nullptr, nullptr);
+    if (!st) return false;
+    const uint8_t* next_in = (const uint8_t*)in.data();
+    size_t avail_in = in.size();
+    char buf[16384];
+    BrotliDecoderResult r;
+    do {
+        uint8_t* next_out = (uint8_t*)buf;
+        size_t avail_out = sizeof(buf);
+        r = BrotliDecoderDecompressStream(st, &avail_in, &next_in, &avail_out, &next_out, nullptr);
+        out.append(buf, sizeof(buf) - avail_out);
+    } while (r == BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT);
+    BrotliDecoderDestroyInstance(st);
+    return !out.empty();
+}
+// Content-Encoding 값에 따라 해제. 실패/미지원이면 빈 문자열.
+static std::string decodeBody(const std::string& encoding, const std::string& in) {
+    std::string enc = encoding;
+    std::transform(enc.begin(), enc.end(), enc.begin(), ::tolower);
+    std::string out;
+    if (enc.find("br") != std::string::npos) { if (brotliDecompress(in, out)) return out; }
+    else if (enc.find("gzip") != std::string::npos || enc.find("deflate") != std::string::npos) {
+        if (inflateGzipOrZlib(in, out)) return out;
+    }
+    return "";
+}
 
 std::string TrafficAnalyzer::getHeaderValue(const std::string& headers, const std::string& key) {
     std::string lowerHeaders = headers;
@@ -163,12 +217,21 @@ void TrafficAnalyzer::parseStandardMultipart(const std::string& body, const std:
     }
 }
 
-void TrafficAnalyzer::analyzeResponse(int statusCode, 
-                                      const std::string& headers, 
+void TrafficAnalyzer::analyzeResponse(int statusCode,
+                                      const std::string& headers,
                                       const std::string& body) {
     std::string encoding = getHeaderValue(headers, "Content-Encoding");
-    if (!encoding.empty() && encoding != "identity") {
-        Logger::warn("[TrafficAnalyzer] 응답이 압축되어 있음: " + encoding + ". 클라이언트 Accept-Encoding 조작 실패 의심.");
+    if (encoding.empty() || encoding == "identity" || body.empty()) return;
+
+    // [9번] Content-Encoding 실해제 — 응답 본문을 우리도 평문으로 읽는다
+    std::string decoded = decodeBody(encoding, body);
+    if (!decoded.empty()) {
+        Logger::info("[Decode] Content-Encoding=" + encoding + ": " +
+                     std::to_string(body.size()) + "B(compressed) -> " +
+                     std::to_string(decoded.size()) + "B(plain)");
+    } else {
+        Logger::warn("[Decode] 해제 실패/미지원: " + encoding +
+                     " (" + std::to_string(body.size()) + "B; 캡처가 잘렸을 수 있음)");
     }
 }
 
