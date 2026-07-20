@@ -142,7 +142,7 @@ void TrafficAnalyzer::routeToParser(const std::string& host, const std::string& 
     
     // AI 서비스 전용 핑거프린트 확인
     if (host.find("chatgpt.com") != std::string::npos && url.find("/backend-api/files") != std::string::npos) {
-        Logger::info("[Router] ChatGPT 파일 업로드 API 식별. ChatGPT 전용 파서로 라우팅됨");
+        Logger::info("[Router] 업로드(ChatGPT 전용) 엔드포인트: " + host + url);
         parseChatGPTUpload(body, contentType);
         return;
     }
@@ -155,7 +155,7 @@ void TrafficAnalyzer::routeToParser(const std::string& host, const std::string& 
             if (!boundary.empty() && boundary.front() == '"') boundary.erase(0, 1);
             if (!boundary.empty() && boundary.back() == '"') boundary.pop_back();
             
-            Logger::info("[Router] 표준 멀티파트 트래픽 식별. 표준 멀티파트 파서로 라우팅됨");
+            Logger::info("[Router] 업로드(표준 multipart) 엔드포인트: " + host + url);
             parseStandardMultipart(body, boundary);
         }
     }
@@ -221,7 +221,8 @@ void TrafficAnalyzer::parseStandardMultipart(const std::string& body, const std:
                     if (safeName != filename)
                         Logger::warn("[Parser] 파일명 경로 안전화: \"" + filename + "\" -> \"" + safeName + "\"");
                     std::string filepath = "captured_files/" + safeName;
-                    std::ofstream ofs(filepath, std::ios::binary);
+                    // UTF-8 파일명(한글 등)을 u8path로 열어 Windows narrow-경로 저장 실패를 막는다.
+                    std::ofstream ofs(std::filesystem::u8path(filepath), std::ios::binary);
                     if (ofs) {
                         ofs.write(partBody.data(), partBody.size());
                         ofs.close();
