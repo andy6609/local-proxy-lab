@@ -62,6 +62,22 @@ static std::string decodeBody(const std::string& encoding, const std::string& in
     return "";
 }
 
+// 업로드 파일명을 안전한 basename 으로 정규화 (경로 탈출 "../", 드라이브(:), 제어문자 차단).
+// 유니코드(한글 등 >=0x80 바이트)는 보존한다.
+static std::string sanitizeFilename(const std::string& raw) {
+    size_t slash = raw.find_last_of("/\\");                 // 디렉터리 성분 제거 → basename
+    std::string name = (slash == std::string::npos) ? raw : raw.substr(slash + 1);
+    std::string safe;
+    for (char c : name) {
+        unsigned char uc = (unsigned char)c;
+        if (uc < 0x20) continue;                            // 제어문자
+        if (c == '/' || c == '\\' || c == ':') continue;    // 잔여 경로/드라이브 구분자
+        safe.push_back(c);
+    }
+    if (safe.empty() || safe == "." || safe == "..") safe = "unnamed_upload";
+    return safe;
+}
+
 std::string TrafficAnalyzer::getHeaderValue(const std::string& headers, const std::string& key) {
     std::string lowerHeaders = headers;
     std::transform(lowerHeaders.begin(), lowerHeaders.end(), lowerHeaders.begin(), ::tolower);
@@ -201,7 +217,10 @@ void TrafficAnalyzer::parseStandardMultipart(const std::string& body, const std:
                     std::string fileHash = calculateHash(partBody);
                     Logger::info("[Verifier] 추출된 파일 해시: " + fileHash + " (원본과 비교 요망)");
                     
-                    std::string filepath = "captured_files/" + filename;
+                    std::string safeName = sanitizeFilename(filename);
+                    if (safeName != filename)
+                        Logger::warn("[Parser] 파일명 경로 안전화: \"" + filename + "\" -> \"" + safeName + "\"");
+                    std::string filepath = "captured_files/" + safeName;
                     std::ofstream ofs(filepath, std::ios::binary);
                     if (ofs) {
                         ofs.write(partBody.data(), partBody.size());

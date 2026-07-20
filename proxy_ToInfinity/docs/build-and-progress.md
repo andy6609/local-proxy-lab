@@ -58,7 +58,8 @@ cl /nologo /EHsc /std:c++17 /utf-8 /I src /I "C:\vcpkg\installed\x64-windows\inc
    - ✅ `std::stoll/stoi` → 안전 파서(`parseLL`) 교체 (비정상 입력에 예외로 스레드 죽던 것)
    - ✅ h1 `analyzeRequest`에 host 대신 **요청 경로** 전달 (ChatGPT 지문 라우팅 정상화)
    - ✅ 응답 body 캡처 **256KB 상한**(`forwardUntilClose`)
-   - ⬜ **저장 파일명 경로안전(`../` 탈출 방어)** (유니코드/한글 저장은 현재 시스템에서 정상 확인됨), **매직넘버 커버리지 확대**(docx=ZIP `PK` 등)
+   - ✅ **저장 파일명 경로탈출 방어(2026-07-21)** — `sanitizeFilename`(basename만 사용, `../`·드라이브(`:`)·제어문자 제거, 유니코드 보존). `../../pwned.txt`→`pwned.txt`로 안전화되어 `captured_files/` 밖으로 안 새는 것 검증.
+   - ⬜ **매직넘버 커버리지 확대**(docx=ZIP `PK`, zip, gif 등)
 3. **Content-Encoding 실해제** — ✅ **h1 완료**(zlib gzip/deflate + brotli; en.wikipedia gzip 51485→256057B 검증). ⬜ **h2는 아직 회피(strip)** — 실해제하려면 응답 body 별도 캡처 필요. 상세: `phase5-vs-code-tracking.md`.
 4. ⬜ 실제 AI 서비스(claude.ai/ChatGPT) 업로드 지문 캡처 → 서비스별 파서(Phase 6). `parseChatGPTUpload`는 현재 스텁.
 
