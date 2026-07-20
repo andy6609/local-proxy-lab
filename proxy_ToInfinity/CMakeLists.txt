@@ -12,6 +12,7 @@ set(SOURCES
     src/Core/ProxyServer.cpp
     src/Crypto/TlsManager.cpp
     src/Protocol/Http1Engine.cpp
+    src/Protocol/Http2Engine.cpp
     src/Inspector/TrafficAnalyzer.cpp
 )
 
@@ -27,7 +28,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # When building, user should run: 
 # cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
 find_package(OpenSSL REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ws2_32
+    crypt32
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    nghttp2
+)
 
 # Link Windows Socket Library
 if(WIN32)

@@ -1,4 +1,5 @@
 #include "Protocol/Http1Engine.h"
+#include "Protocol/Http2Engine.h"
 #include "Core/Logger.h"
 #include "Crypto/TlsManager.h"
 #include "Inspector/TrafficAnalyzer.h"
@@ -308,6 +309,21 @@ void Http1Engine::process(Context& ctx) {
         Logger::error("Client SSL_accept failed (possibly ALPN fallback rejected)");
         return;
     }
+
+    // 3.5 ALPN 확인 및 분기
+    const unsigned char* alpnData = nullptr;
+    unsigned int alpnLen = 0;
+    SSL_get0_alpn_selected(ctx.clientSsl, &alpnData, &alpnLen);
+    
+    if (alpnLen == 2 && memcmp(alpnData, "h2", 2) == 0) {
+        ctx.isClientHttp2 = true;
+        Logger::info("ALPN Negotiated: h2 for " + ctx.targetHost);
+        Http2Engine::process(ctx);
+        return; // HTTP/2 처리는 Http2Engine에 위임하고 종료
+    }
+    
+    ctx.isClientHttp2 = false;
+    Logger::info("ALPN Negotiated: http/1.1 for " + ctx.targetHost);
 
     TlsStream clientStream(ctx.clientSsl);
     TlsStream upstreamStream(ctx.upstreamSsl);

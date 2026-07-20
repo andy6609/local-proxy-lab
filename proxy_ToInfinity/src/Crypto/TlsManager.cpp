@@ -10,13 +10,13 @@
 
 namespace proxy {
 
-static const unsigned char ALPN_HTTP11[] = { 8, 'h','t','t','p','/','1','.','1' };
+static const unsigned char ALPN_BOTH[] = { 2, 'h','2', 8, 'h','t','t','p','/','1','.','1' };
 
-// 브라우저 ↔ 프록시 세션에서 브라우저가 h2를 제안해도 무조건 http/1.1로 다운그레이드
-static int alpnSelectHttp11(SSL*, const unsigned char** out, unsigned char* outlen,
-                            const unsigned char* in, unsigned int inlen, void*) {
+// 클라이언트가 제안하는 프로토콜 중 h2 우선, 없으면 http/1.1 선택
+static int alpnSelectPreferH2(SSL*, const unsigned char** out, unsigned char* outlen,
+                              const unsigned char* in, unsigned int inlen, void*) {
     if (SSL_select_next_proto((unsigned char**)out, outlen,
-                              ALPN_HTTP11, sizeof(ALPN_HTTP11), in, inlen) == OPENSSL_NPN_NEGOTIATED) {
+                              ALPN_BOTH, sizeof(ALPN_BOTH), in, inlen) == OPENSSL_NPN_NEGOTIATED) {
         return SSL_TLSEXT_ERR_OK;
     }
     return SSL_TLSEXT_ERR_ALERT_FATAL;
@@ -72,7 +72,7 @@ public:
         SSL_CTX* ctx = SSL_CTX_new(TLS_server_method());
         if (!ctx) { X509_free(leaf); return nullptr; }
         SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION);
-        SSL_CTX_set_alpn_select_cb(ctx, alpnSelectHttp11, nullptr); // ALPN: 강제 HTTP/1.1
+        SSL_CTX_set_alpn_select_cb(ctx, alpnSelectPreferH2, nullptr); // ALPN: h2 우선
         
         if (SSL_CTX_use_certificate(ctx, leaf) != 1 ||
             SSL_CTX_use_PrivateKey(ctx, leafKey_) != 1 ||
@@ -148,6 +148,9 @@ bool TlsManager::init() {
         Logger::error("Failed to create upstream SSL_CTX");
         return false;
     }
+    
+    // Upstream 클라이언트로서 ALPN h2, http/1.1 제안
+    SSL_CTX_set_alpn_protos(g_upstreamCtx, ALPN_BOTH, sizeof(ALPN_BOTH));
     
     // PoC 목적상 업스트림 인증서 검증은 생략
     SSL_CTX_set_verify(g_upstreamCtx, SSL_VERIFY_NONE, nullptr);
