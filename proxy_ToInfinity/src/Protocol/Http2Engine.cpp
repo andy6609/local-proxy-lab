@@ -59,7 +59,8 @@ struct H2Bridge {
 
 static bool skipReqHeader(const std::string& lname) {
     return lname == "connection" || lname == "keep-alive" || lname == "proxy-connection" ||
-           lname == "transfer-encoding" || lname == "upgrade" || lname == "host" || lname == "te";
+           lname == "transfer-encoding" || lname == "upgrade" || lname == "host" || lname == "te" ||
+           lname == "accept-encoding"; // [Phase 5] 압축 회피: 서버가 평문 응답을 보내도록 강제
 }
 
 static ssize_t reqBodyRead(nghttp2_session*, int32_t, uint8_t* buf, size_t length,
@@ -189,14 +190,16 @@ static int cb_on_frame_recv(nghttp2_session* session, const nghttp2_frame* frame
             
             // 본문이 없는 GET 요청인 경우 바로 분석기 호출
             if (endStream) {
-                TrafficAnalyzer::analyzeRequest(s->method, s->path, "H2-Headers", "");
+                std::string hdrs = "Content-Type: " + s->ctype + "\r\nHost: " + br->host + "\r\n";
+                TrafficAnalyzer::analyzeRequest(s->method, s->path, hdrs, "");
             }
         } else if (frame->hd.type == NGHTTP2_DATA && endStream) {
             H2Stream* s = (H2Stream*)nghttp2_session_get_stream_user_data(session, sid);
             if (s) {
                 s->reqEof = true;
                 if (s->uid >= 0) nghttp2_session_resume_data(br->usess, s->uid);
-                TrafficAnalyzer::analyzeRequest(s->method, s->path, "H2-Headers", s->uploadCap);
+                std::string hdrs = "Content-Type: " + s->ctype + "\r\nHost: " + br->host + "\r\n";
+                TrafficAnalyzer::analyzeRequest(s->method, s->path, hdrs, s->uploadCap);
             }
         }
     } else {

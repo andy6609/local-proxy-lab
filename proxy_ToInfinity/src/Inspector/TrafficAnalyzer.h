@@ -2,10 +2,10 @@
 #define PROXY_TRAFFIC_ANALYZER_H
 
 #include <string>
+#include <vector>
 
 namespace proxy {
 
-// 이 클래스가 앞으로 파일 업로드 분석, multipart 파싱, 매직넘버 검사를 담당합니다.
 class TrafficAnalyzer {
 public:
     // 클라이언트 -> 서버 방향의 요청을 가로채서 검사
@@ -18,6 +18,20 @@ public:
     static void analyzeResponse(int statusCode, 
                                 const std::string& headers, 
                                 const std::string& body);
+private:
+    // 핑거프린트 기반 라우터
+    static void routeToParser(const std::string& host, const std::string& url, const std::string& contentType, const std::string& headers, const std::string& body);
+
+    // 공통 멀티파트 파서 (Standard)
+    static void parseStandardMultipart(const std::string& body, const std::string& boundary);
+
+    // AI 서비스 전용 커스텀 파서 (예시)
+    static void parseChatGPTUpload(const std::string& body, const std::string& contentType);
+
+    // 검증 유틸리티
+    static std::string calculateHash(const std::string& data);
+    static bool verifyMagicNumber(const std::string& data, const std::string& mimeType);
+    static std::string getHeaderValue(const std::string& headers, const std::string& key);
 };
 
 } // namespace proxy

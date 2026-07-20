@@ -343,6 +343,15 @@ void Http1Engine::process(Context& ctx) {
         long long reqLen = 0;
         BodyMode reqMode = requestBodyMode(req, reqLen);
         
+        // [Phase 5] 압축 회피: 클라이언트의 Accept-Encoding 헤더를 지워서 서버가 평문 응답을 보내게 함
+        for (auto it = req.headers.begin(); it != req.headers.end(); ) {
+            if (toLower(it->first) == "accept-encoding") {
+                it = req.headers.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
         std::string reqBodyCap;
         std::string* reqCapPtr = &reqBodyCap; // 항상 캡처하여 TrafficAnalyzer에 전달
 
