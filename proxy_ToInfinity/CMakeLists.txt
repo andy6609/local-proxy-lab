@@ -9,6 +9,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(SOURCES
     src/main.cpp
     src/Core/Logger.cpp
+    src/Core/ProxyServer.cpp
+    src/Crypto/TlsManager.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
