@@ -25,7 +25,7 @@
 | 크기 | 13699 bytes (원본과 일치) |
 | MIME | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` |
 | 매직넘버 | 일치 (`PK` = ZIP/OOXML, 예외폴더 평문이라 본문까지 보임) |
-| **엔드포인트** | 한 번 업로드에 **탐지 2회** = 두 엔드포인트로 보냄 (이전 관찰: `.../wiggle/upload-file` → `.../convert_document`). ※ 현재 로그엔 URL 미기록 — 아래 이슈2 |
+| **엔드포인트** | 한 번 업로드에 **탐지 2회** = 두 엔드포인트로 동시에 보냄 (재캡처 2026-07-21로 URL 확보): <br>① `claude.ai/api/organizations/{org}/conversations/{conv}/wiggle/upload-file` <br>② `claude.ai/api/organizations/{org}/convert_document` <br>({org}/{conv}=계정·대화별 UUID → 지문은 경로 패턴만 의미) |
 
 ### 콘솔 로그 (실제로 찍힌 것, 2회 반복)
 ```
@@ -67,6 +67,17 @@ h2 연결이 뜬 관련 호스트(일부): `claude.ai`, `api.anthropic.com`, `a-
 
 ---
 
+## 재캡처 결과 (2026-07-21, 커밋 16b8940 반영)
+- ✅ **이슈1 해결** — 한글 파일명 저장됨(`u8path`). ✅ **이슈2 해결** — 엔드포인트 URL 로깅됨(위 표 ①②).
+- ⚠️ **이슈3 (신규) — 동시 쓰기 레이스로 저장 파일 손상.**
+  - claude.ai가 한 업로드를 **두 엔드포인트(upload-file, convert_document)로 동시** 전송 → 프록시가
+    **두 스레드에서 같은 출력 파일명에 동시 쓰기** → 저장본이 깨짐.
+  - 증거: 파서 로그는 두 번 다 `13699 bytes 추출/저장 완료`인데, **디스크 파일은 19600 bytes 이고
+    `DRMONE`(Fasoo DRM 암호문) 헤더**로 시작 → 파서가 쓴 것(13699 평문)과 디스크(19600 DRM)가 불일치.
+    (두 쓰기가 뒤엉킴 + 업로드한 파일이 DRM본이었을 가능성)
+  - 영향: **탐지·URL·메타데이터는 정확**하나 **"추출 파일 저장"은 신뢰 불가** → W8(바이너리 추출·해시검증) 전 필수 수정.
+  - 수정안: 출력 파일명을 **캡처마다 유니크**(엔드포인트/카운터/타임스탬프 접두어) + 쓰기 보호(뮤텍스) → 동시 쓰기 충돌 제거.
+
 ## 다음
-- 위 두 수정 후 claude.ai 재캡처 → **URL 패턴 + 저장된 파일**까지 채워 이 표 완성.
+- **이슈3 수정** 후 claude.ai 재캡처 → 저장 파일 **바이트 무결성**까지 확인.
 - 이어서 **ChatGPT / Gemini / 네이버**도 같은 방식으로 캡처 → 서비스별 비교 표.
