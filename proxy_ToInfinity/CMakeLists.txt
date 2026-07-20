@@ -11,6 +11,8 @@ set(SOURCES
     src/Core/Logger.cpp
     src/Core/ProxyServer.cpp
     src/Crypto/TlsManager.cpp
+    src/Protocol/Http1Engine.cpp
+    src/Inspector/TrafficAnalyzer.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
