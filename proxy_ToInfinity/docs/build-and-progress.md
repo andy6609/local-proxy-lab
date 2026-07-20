@@ -3,8 +3,8 @@
 > Infinity 버전(모듈화 리팩터 + 파일 추출/해시/매직넘버)을 **처음으로 실제 빌드·실행 검증**한 기록.
 
 ## 상태 한 줄
-**빌드 OK + HTTP/1.1 및 HTTP/2 경로 실동작 검증 완료.**
-(h2는 실브라우저 페이지 로드까지 확인 — 단, h2 파일업로드 탐지는 별도 확인 필요. 아래 "다음 할 일" §1)
+**빌드 OK + HTTP/1.1 및 HTTP/2 경로 실동작 검증 완료 (업로드 탐지·Content-Encoding 해제 포함).**
+(h2는 페이지 로드 + 파일 업로드 탐지까지 검증됨(2026-07-21). CMake 정식 빌드 동작. 남은 것은 "다음 할 일" 참조)
 
 ## 빌드 방법 (검증됨)
 - 의존: vcpkg `openssl` + `nghttp2`(x64-windows), MSVC(VS2022 vcvars64). CMake 대신 **cl.exe 직접**로 검증.
@@ -48,17 +48,23 @@ cl /nologo /EHsc /std:c++17 /utf-8 /I src /I "C:\vcpkg\installed\x64-windows\inc
 - **사소(개선 후보):** 콘솔 로그엔 한글 파일명이 `�̰���...`로 깨져 보임(콘솔 코드페이지 표시 문제일 뿐 — **저장 파일명·내용은 정상**). `SetConsoleOutputCP(CP_UTF8)`로 개선 가능.
 
 ## 다음 할 일
-1. **h2 경로** — **✅ 중계·복호화 검증 완료(2026-07-20).** 헤드리스 크롬(`--disable-quic`)으로 example.com + 크롬이 부르는 구글 서비스들이 `H2Bridge`를 통해 h2로 정상 로드됨(DOM 덤프에 "Example Domain" 확인). Plan B의 RST_STREAM 픽스(`MAKE_NV`)가 실제로 유효함을 확인.
-   - **남은 것:** **h2 파일 업로드 탐지**(멀티파트 over h2)는 실제 h2 multipart POST로 아직 미확인. 코드 경로(`cb_on_data_chunk`→`analyzeRequest`)는 h1과 공유하나 h2 프레이밍 기준 검증 필요. (실브라우저로 claude.ai 등에 파일 올려 확인)
-2. **코드 리뷰 잔여 개선점(유효):**
-   - `Http1Engine`의 `std::stoll`/`std::stoi` → **예외 던짐**(detached 스레드에서 uncaught = 프로세스 종료). v4식 안전 파서로 교체.
-   - `analyzeRequest`에 h1은 url 대신 **host를 넘김** → ChatGPT 지문 라우팅이 h1에서 안 됨. 요청 경로 전달로 수정.
-   - 응답 body **무제한 캡처**(`forwardUntilClose`) → 상한/비활성화.
-   - 저장 파일명 경로안전(`../`)·유니코드(한글) 처리, 매직넘버 커버리지 확대(docx=ZIP 등).
-3. **Content-Encoding 실해제**(zlib/brotli) — 현재는 Accept-Encoding 제거(회피)만. `proxy_beyond_docs/protocol-handling-6-9.md` §9에 구현법 정리됨.
-4. 실제 AI 서비스(claude.ai/ChatGPT) 업로드 지문 캡처 → 서비스별 파서(Phase 6).
+
+> **진행 갱신 2026-07-21:** 아래 대부분 완료(✅). 남은 것(⬜)만 이어가면 됨.
+
+1. **h2 경로 — ✅ 완료.**
+   - 중계·복호화(2026-07-20): 헤드리스 크롬으로 example.com + 구글 서비스들이 `H2Bridge`로 h2 정상 로드.
+   - **파일 업로드 탐지(2026-07-21):** 크롬이 h2로 fetch-POST한 multipart를 `Http2Engine`(`cb_on_data_chunk`→`analyzeRequest`)가 잡아 `h2test.pdf` 추출·매직넘버 일치·디스크 저장 확인. Plan B RST_STREAM 픽스(`MAKE_NV`) 유효.
+2. **코드 리뷰 개선점:**
+   - ✅ `std::stoll/stoi` → 안전 파서(`parseLL`) 교체 (비정상 입력에 예외로 스레드 죽던 것)
+   - ✅ h1 `analyzeRequest`에 host 대신 **요청 경로** 전달 (ChatGPT 지문 라우팅 정상화)
+   - ✅ 응답 body 캡처 **256KB 상한**(`forwardUntilClose`)
+   - ⬜ **저장 파일명 경로안전(`../` 탈출 방어)** (유니코드/한글 저장은 현재 시스템에서 정상 확인됨), **매직넘버 커버리지 확대**(docx=ZIP `PK` 등)
+3. **Content-Encoding 실해제** — ✅ **h1 완료**(zlib gzip/deflate + brotli; en.wikipedia gzip 51485→256057B 검증). ⬜ **h2는 아직 회피(strip)** — 실해제하려면 응답 body 별도 캡처 필요. 상세: `phase5-vs-code-tracking.md`.
+4. ⬜ 실제 AI 서비스(claude.ai/ChatGPT) 업로드 지문 캡처 → 서비스별 파서(Phase 6). `parseChatGPTUpload`는 현재 스텁.
 
 ## 관련
-- 설계/의도: `docs/phase5-walkthrough.md`, `../docs/ToInfinity/phase5-implementation-plan.md`
-- 프로토콜 개념: `../proxy_beyond_docs/protocol-handling-6-9.md`
-- h2 버그 기록: `../docs/troubleshooting/h2-rst-stream-bug.md`
+- 설계/의도: `phase5-walkthrough.md`, `../../docs/ToInfinity/phase5-implementation-plan.md`
+- 계획↔코드 차이 추적: `phase5-vs-code-tracking.md`
+- CMake 빌드: `cmake-guide.md`
+- 프로토콜 개념: `../../proxy_beyond_docs/protocol-handling-6-9.md`
+- h2 버그 기록: `../../docs/troubleshooting/h2-rst-stream-bug.md`
