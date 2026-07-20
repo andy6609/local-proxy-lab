@@ -3,7 +3,8 @@
 > Infinity 버전(모듈화 리팩터 + 파일 추출/해시/매직넘버)을 **처음으로 실제 빌드·실행 검증**한 기록.
 
 ## 상태 한 줄
-**빌드 OK + HTTP/1.1 경로 실동작 검증 완료.** (h2 경로는 아직 미검증)
+**빌드 OK + HTTP/1.1 및 HTTP/2 경로 실동작 검증 완료.**
+(h2는 실브라우저 페이지 로드까지 확인 — 단, h2 파일업로드 탐지는 별도 확인 필요. 아래 "다음 할 일" §1)
 
 ## 빌드 방법 (검증됨)
 - 의존: vcpkg `openssl` + `nghttp2`(x64-windows), MSVC(VS2022 vcvars64). CMake 대신 **cl.exe 직접**로 검증.
@@ -47,7 +48,8 @@ cl /nologo /EHsc /std:c++17 /utf-8 /I src /I "C:\vcpkg\installed\x64-windows\inc
 - **사소(개선 후보):** 콘솔 로그엔 한글 파일명이 `�̰���...`로 깨져 보임(콘솔 코드페이지 표시 문제일 뿐 — **저장 파일명·내용은 정상**). `SetConsoleOutputCP(CP_UTF8)`로 개선 가능.
 
 ## 다음 할 일
-1. **h2 경로 검증** — 실브라우저(크롬 `--disable-quic`)로 `Http2Engine`(Plan B 브릿지 이식본) 실동작 확인. (Plan B의 RST_STREAM 픽스 `MAKE_NV`는 반영돼 있으나 미검증)
+1. **h2 경로** — **✅ 중계·복호화 검증 완료(2026-07-20).** 헤드리스 크롬(`--disable-quic`)으로 example.com + 크롬이 부르는 구글 서비스들이 `H2Bridge`를 통해 h2로 정상 로드됨(DOM 덤프에 "Example Domain" 확인). Plan B의 RST_STREAM 픽스(`MAKE_NV`)가 실제로 유효함을 확인.
+   - **남은 것:** **h2 파일 업로드 탐지**(멀티파트 over h2)는 실제 h2 multipart POST로 아직 미확인. 코드 경로(`cb_on_data_chunk`→`analyzeRequest`)는 h1과 공유하나 h2 프레이밍 기준 검증 필요. (실브라우저로 claude.ai 등에 파일 올려 확인)
 2. **코드 리뷰 잔여 개선점(유효):**
    - `Http1Engine`의 `std::stoll`/`std::stoi` → **예외 던짐**(detached 스레드에서 uncaught = 프로세스 종료). v4식 안전 파서로 교체.
    - `analyzeRequest`에 h1은 url 대신 **host를 넘김** → ChatGPT 지문 라우팅이 h1에서 안 됨. 요청 경로 전달로 수정.
