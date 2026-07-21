@@ -132,11 +132,26 @@ void TrafficAnalyzer::analyzeRequest(const std::string& method,
                                      const std::string& url, 
                                      const std::string& headers, 
                                      const std::string& body) {
-    if (method != "POST" && method != "PUT") return;
+    if (method != "POST" && method != "PUT" && method != "PATCH") return;
 
     std::string host = getHeaderValue(headers, "Host");
     std::string contentType = getHeaderValue(headers, "Content-Type");
-    
+
+    // [Observe] 업로드성 요청(POST/PUT/PATCH)을 전부 남긴다 — multipart가 아닌 방식
+    // (구글 resumable, JSON+base64 등)까지 보이게 해서 서비스별 업로드 지문을 조사한다.
+    std::string up1 = getHeaderValue(headers, "X-Goog-Upload-Protocol");
+    std::string up2 = getHeaderValue(headers, "X-Goog-Upload-Command");
+    std::string extra;
+    if (!up1.empty()) extra += "  X-Goog-Upload-Protocol=" + up1;
+    if (!up2.empty()) extra += "  X-Goog-Upload-Command=" + up2;
+    std::string head;
+    if (!body.empty()) {
+        head = body.substr(0, 48);
+        for (char& c : head) if ((unsigned char)c < 0x20 || (unsigned char)c >= 0x7f) c = '.';
+    }
+    Logger::info("[Observe] " + method + " " + host + url + "  ct=[" + contentType + "]  bodylen=" +
+                 std::to_string(body.size()) + extra + (head.empty() ? "" : ("  head=" + head)));
+
     if (!contentType.empty()) {
         routeToParser(host, url, contentType, headers, body);
     }

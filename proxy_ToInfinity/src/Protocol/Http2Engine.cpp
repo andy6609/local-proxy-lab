@@ -190,7 +190,8 @@ static int cb_on_frame_recv(nghttp2_session* session, const nghttp2_frame* frame
             
             // 본문이 없는 GET 요청인 경우 바로 분석기 호출
             if (endStream) {
-                std::string hdrs = "Content-Type: " + s->ctype + "\r\nHost: " + br->host + "\r\n";
+                std::string hdrs = "Host: " + br->host + "\r\n";
+                for (auto& kv : s->reqHdr) hdrs += kv.first + ": " + kv.second + "\r\n";
                 TrafficAnalyzer::analyzeRequest(s->method, s->path, hdrs, "");
             }
         } else if (frame->hd.type == NGHTTP2_DATA && endStream) {
@@ -198,7 +199,8 @@ static int cb_on_frame_recv(nghttp2_session* session, const nghttp2_frame* frame
             if (s) {
                 s->reqEof = true;
                 if (s->uid >= 0) nghttp2_session_resume_data(br->usess, s->uid);
-                std::string hdrs = "Content-Type: " + s->ctype + "\r\nHost: " + br->host + "\r\n";
+                std::string hdrs = "Host: " + br->host + "\r\n";
+                for (auto& kv : s->reqHdr) hdrs += kv.first + ": " + kv.second + "\r\n";
                 TrafficAnalyzer::analyzeRequest(s->method, s->path, hdrs, s->uploadCap);
             }
         }
