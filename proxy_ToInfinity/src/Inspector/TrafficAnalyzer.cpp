@@ -5,10 +5,14 @@
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <atomic>
 #include <zlib.h>
 #include <brotli/decode.h>
 
 namespace proxy {
+
+// 저장 파일명 유니크화용 시퀀스 (동시 업로드가 같은 파일명에 겹쳐써서 깨지던 문제 방지)
+static std::atomic<unsigned> g_captureSeq{ 0 };
 
 // ============================================================
 //  Content-Encoding 실해제 (gzip/deflate=zlib, br=brotli)
@@ -220,7 +224,10 @@ void TrafficAnalyzer::parseStandardMultipart(const std::string& body, const std:
                     std::string safeName = sanitizeFilename(filename);
                     if (safeName != filename)
                         Logger::warn("[Parser] 파일명 경로 안전화: \"" + filename + "\" -> \"" + safeName + "\"");
-                    std::string filepath = "captured_files/" + safeName;
+                    // 캡처마다 유니크 접두어(순번) → 동시 업로드(예: claude.ai upload-file +
+                    // convert_document)가 같은 파일명에 겹쳐써서 저장본이 깨지던 레이스 제거.
+                    unsigned seq = ++g_captureSeq;
+                    std::string filepath = "captured_files/" + std::to_string(seq) + "_" + safeName;
                     // UTF-8 파일명(한글 등)을 u8path로 열어 Windows narrow-경로 저장 실패를 막는다.
                     std::ofstream ofs(std::filesystem::u8path(filepath), std::ios::binary);
                     if (ofs) {
