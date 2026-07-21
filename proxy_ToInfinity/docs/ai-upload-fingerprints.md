@@ -68,7 +68,11 @@ POST push.clients6.google.com/upload/?upload_id=...&upload_protocol=resumable   
 - **claude.ai = 표준 multipart**(우리 파서로 바로 잡힘) vs **Gemini = Google resumable upload**(multipart 아님 → 표준 파서에 안 걸림). → **Gemini는 전용 처리 필요**(ChatGPT 파서 스텁과 같은 축의 과제).
 - 단 **탐지·추출은 쉬움:** `push.clients6.google.com/upload/` + `X-Goog-Upload-Command: upload, finalize` 요청의 **body가 곧 원본 파일**(래핑 없음). resumable 핸들러만 추가하면 파일명(start 메타)·본문 추출 가능.
 - 이걸 발견하게 해준 게 이번에 추가한 **`[Observe]` 로그**(모든 POST/PUT/PATCH의 엔드포인트·Content-Type·업로드헤더·body head). multipart만 보던 때는 안 보였음.
-- ⚠️ **주목 — 평문/DRM 차이:** 이번 Gemini 업로드 본문은 **평문(PK 13699)**, 앞서 claude.ai는 **DRM 암호문(19856)**. "같은 파일"이라면 **Fasoo가 목적지(사이트)별로 DRM 적용을 달리할 가능성**(claude엔 암호화, gemini엔 평문) — 아니면 서로 다른 복사본을 올린 것. **[재검증 필요]** 동일 파일을 claude/gemini에 각각 올려 본문이 평문/DRM 어느 쪽인지 비교. (사실이면 강한 DLP 발견: DRM 정책이 업로드 목적지에 따라 갈림)
+- ⭐⭐ **[재검증 완료 2026-07-21] 확인됨 — Fasoo DRM은 "목적지(사이트)별" 정책:** **완전히 같은 파일**(워드로 새로 만든 `이것은 더 새로운 파일이다.docx`)을 **같은 크롬 세션**에서 둘 다 올렸더니:
+  - claude.ai → **DRM 암호문 21840B (`DRMONE`)**
+  - Gemini → **평문 15688B (`PK..[Content_Types].xml`)**
+
+  같은 파일·같은 브라우저인데 **목적지에 따라 암호문/평문이 갈렸다.** → **Fasoo가 업로드 목적지별로 DRM 적용을 결정한다**(claude.ai=보호/암호화 대상, gemini=허용). 즉 Fasoo 보호에 **사이트 allowlist 성격**이 있고 **Gemini는 (현재) 미커버.** (강한 DLP 발견 — 프로세스 기반에 더해 **목적지 기반**이라는 둘째 축)
 
 ## 3. 이 캡처에서 드러난 문제 (트러블슈팅, claude.ai 캡처 기준)
 
