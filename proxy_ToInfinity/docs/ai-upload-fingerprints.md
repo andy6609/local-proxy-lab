@@ -45,7 +45,32 @@ h2 연결이 뜬 관련 호스트(일부): `claude.ai`, `api.anthropic.com`, `a-
 
 ---
 
-## 2. 이 캡처에서 드러난 문제 (트러블슈팅)
+## 2. Gemini (gemini.google.com) — 2026-07-21
+
+**업로드 파일:** `이것은 새로운 파일 이다.docx` (claude 때와 같은 파일이라고 함)
+
+### 지문
+| 항목 | 값 |
+|---|---|
+| 전송 | HTTP/2 (QUIC 끈 상태) |
+| 업로드 형식 | **표준 multipart 아님 → Google resumable upload 프로토콜** (`X-Goog-Upload-*` 헤더) |
+| 엔드포인트 | `push.clients6.google.com/upload/` (2단계) |
+| 방식 | ① `X-Goog-Upload-Command=start`(메타데이터: `File name: ...`, body 작음) → ② `?upload_id=...&upload_protocol=resumable` + `X-Goog-Upload-Command=upload, finalize` 에 **원본 파일 바이트를 그대로**(멀티파트 래핑 없음) |
+| 본문 | 이번엔 **평문** `PK..[Content_Types].xml`(정상 docx, **13699B**) |
+
+로그(요약, `[Observe]`):
+```
+POST push.clients6.google.com/upload/   X-Goog-Upload-Protocol=resumable  X-Goog-Upload-Command=start   bodylen=49   head=File name: ...
+POST push.clients6.google.com/upload/?upload_id=...&upload_protocol=resumable   X-Goog-Upload-Command=upload, finalize   bodylen=13699   head=PK...[Content_Types].xml
+```
+
+### 의미 (claude.ai와 대조)
+- **claude.ai = 표준 multipart**(우리 파서로 바로 잡힘) vs **Gemini = Google resumable upload**(multipart 아님 → 표준 파서에 안 걸림). → **Gemini는 전용 처리 필요**(ChatGPT 파서 스텁과 같은 축의 과제).
+- 단 **탐지·추출은 쉬움:** `push.clients6.google.com/upload/` + `X-Goog-Upload-Command: upload, finalize` 요청의 **body가 곧 원본 파일**(래핑 없음). resumable 핸들러만 추가하면 파일명(start 메타)·본문 추출 가능.
+- 이걸 발견하게 해준 게 이번에 추가한 **`[Observe]` 로그**(모든 POST/PUT/PATCH의 엔드포인트·Content-Type·업로드헤더·body head). multipart만 보던 때는 안 보였음.
+- ⚠️ **주목 — 평문/DRM 차이:** 이번 Gemini 업로드 본문은 **평문(PK 13699)**, 앞서 claude.ai는 **DRM 암호문(19856)**. "같은 파일"이라면 **Fasoo가 목적지(사이트)별로 DRM 적용을 달리할 가능성**(claude엔 암호화, gemini엔 평문) — 아니면 서로 다른 복사본을 올린 것. **[재검증 필요]** 동일 파일을 claude/gemini에 각각 올려 본문이 평문/DRM 어느 쪽인지 비교. (사실이면 강한 DLP 발견: DRM 정책이 업로드 목적지에 따라 갈림)
+
+## 3. 이 캡처에서 드러난 문제 (트러블슈팅, claude.ai 캡처 기준)
 
 ### 이슈1 — 한글(유니코드) 파일명 저장 실패
 - 증상: `[Parser] 파일 저장 실패: captured_files/이것은 새로운 파일 이다.docx`. 탐지·추출·매직·해시는
