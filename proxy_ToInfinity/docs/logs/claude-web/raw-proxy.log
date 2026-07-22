@@ -1,0 +1,44 @@
+[INFO]  H2Bridge closed for claude.ai
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=522082d8-f1ce-4036-a6fc-db369a3a9a33&batch_time=1784683042387&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15522  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  H2Bridge closed for newassets.hcaptcha.com
+[INFO]  H2Bridge closed for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge closed for content-autofill.googleapis.com
+[INFO]  H2Bridge closed for ad.doubleclick.net
+[INFO]  H2Bridge closed for 0006c408f9b0.w.hcaptcha.com
+[INFO]  H2Bridge closed for fonts.gstatic.com
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=635  head={"events":[{"event_type":"HealthMetricEvent","ev
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=9c654732-f300-45d9-831b-5aa3434ab55e&batch_time=1784683045439&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15442  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=16071  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  H2Bridge closed for lh3.googleusercontent.com
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=383  head={"events":[{"event_type":"GrowthbookExperimentEv
+[INFO]  H2Bridge closed for accounts.youtube.com
+[INFO]  H2Bridge closed for www.gstatic.com
+[INFO]  H2Bridge closed for ee6a11be6ecc.w.hcaptcha.com
+[INFO]  H2Bridge closed for www.gstatic.com
+[INFO]  H2Bridge closed for ssl.gstatic.com
+[INFO]  [Observe] POST claude.ai/api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/conversations/274b993b-4579-4161-979f-786a003df73c/wiggle/upload-file  ct=[multipart/form-data; boundary=----WebKitFormBoundary895V3Na2ma2Y0mpj]  bodylen=7584  head=------WebKitFormBoundary895V3Na2ma2Y0mpj..Conten
+[INFO]  [Router] 업로드(표준 multipart) 엔드포인트: claude.ai/api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/conversations/274b993b-4579-4161-979f-786a003df73c/wiggle/upload-file
+[INFO]  [Parser] 파일명: distributor.go, 크기: 7382 bytes 추출 완료
+[INFO]  [Verifier] 매직넘버 일치 확인 (application/octet-stream)
+[INFO]  [Verifier] 추출된 파일 해시: d5e20f1a52840652 (원본과 비교 요망)
+[INFO]  [Parser] 파일 저장 완료: captured_files/1_distributor.go
+[INFO]  ALPN Negotiated: h2 for android.clients.google.com
+[INFO]  H2Bridge running for android.clients.google.com
+[INFO]  [Observe] POST android.clients.google.com/c2dm/register3  ct=[application/x-www-form-urlencoded]  bodylen=73  head=app=com.google.android.gms&device=50215211173499
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=f6c4791b-6ad7-4678-93bd-d353717c5060&batch_time=1784683058801&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14918  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST claude.ai/api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/chat_conversations/274b993b-4579-4161-979f-786a003df73c/completion  ct=[application/json]  bodylen=14449  head={"prompt":"","timezone":"Europe/London","locale"
+[INFO]  ALPN Negotiated: h2 for www.google.com
+[INFO]  H2Bridge running for www.google.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=b4740b2a-51e3-4f78-83c5-dd6d1bb6ce3a&batch_time=1784683059220&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15281  head={"type":"action","_dd":{"format_version":2,"drif
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=840aa98a-b072-4da4-abe5-ca4d93bd281c&batch_time=1784683060254&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15743  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=79afc5ed-86b9-4648-96cd-0c9a3a5c954e&batch_time=1784683061975&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14360  head={"type":"long_task","_dd":{"format_version":2,"d
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=15390  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  H2Bridge closed for edgedl.me.gvt1.com
+[INFO]  H2Bridge closed for update.googleapis.com
+[INFO]  H2Bridge closed for accounts.google.com
+[INFO]  H2Bridge closed for play.google.com
+[INFO]  H2Bridge closed for content-autofill.googleapis.com
+[INFO]  H2Bridge closed for ssl.gstatic.com
+[INFO]  H2Bridge closed for api.hcaptcha.com
+[INFO]  H2Bridge closed for api.hcaptcha.com
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=1307  head={"events":[{"event_type":"HealthMetricEvent","ev
