@@ -1,0 +1,118 @@
+[INFO]  proxy_ToInfinity starting...
+[INFO]  TlsManager initialized successfully.
+[INFO]  ProxyServer listening on port 18080
+[INFO]  ALPN Negotiated: h2 for claude.ai
+[INFO]  H2Bridge running for claude.ai
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch?service_name=claude_ai  ct=[]  bodylen=2848  head={"events":[{"event_type":"ProductAnalyticsEvent"
+[INFO]  H2Bridge closed for claude.ai
+[INFO]  ALPN Negotiated: h2 for www.google.com
+[INFO]  H2Bridge running for www.google.com
+[INFO]  ALPN Negotiated: h2 for a-api.anthropic.com
+[INFO]  H2Bridge running for a-api.anthropic.com
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=7736  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  H2Bridge closed for a-api.anthropic.com
+[INFO]  ALPN Negotiated: h2 for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge running for browser-intake-us5-datadoghq.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=cfab518f-0a20-4167-93c9-ee48675bb331&batch_time=1784683835332&_dd.api=beacon  ct=[text/plain;charset=UTF-8]  bodylen=3526  head={"type":"view","_dd":{"format_version":2,"drift"
+[INFO]  H2Bridge closed for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge closed for www.google.com
+[INFO]  ALPN Negotiated: h2 for claude.ai
+[INFO]  H2Bridge running for claude.ai
+[INFO]  ALPN Negotiated: h2 for api.anthropic.com
+[INFO]  H2Bridge running for api.anthropic.com
+[INFO]  ALPN Negotiated: h2 for s-cdn.anthropic.com
+[INFO]  H2Bridge running for s-cdn.anthropic.com
+[INFO]  [Observe] POST claude.ai/api/billing/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/individual_plan_pricing/v2  ct=[application/json]  bodylen=77  head={"address":{},"forDisplayOnly":true,"planTypes":
+[INFO]  ALPN Negotiated: h2 for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge running for browser-intake-us5-datadoghq.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=ce310443-923d-40c1-9b45-969f1b044c79&batch_time=1784683876356&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15649  head={"type":"action","_dd":{"format_version":2,"drif
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=035fc080-6db5-44c3-b9a8-dab8900cbb4e&batch_time=1784683876721&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15194  head={"type":"long_task","_dd":{"format_version":2,"d
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=a271694d-6fcb-480e-9722-38579b0a36cd&batch_time=1784683876838&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15259  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=c338716f-6a06-4e85-879f-77f3c713356f&batch_time=1784683876839&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15496  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=413b0789-8ed5-4033-88e7-38032686d6e8&batch_time=1784683876840&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15275  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  ALPN Negotiated: h2 for api.anthropic.com
+[INFO]  H2Bridge running for api.anthropic.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=d79086ac-6208-4a88-a3a4-b7bdfd451453&batch_time=1784683876928&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15288  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=32e6e6e4-b1d7-43a7-b134-c7d869c81566&batch_time=1784683877013&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15263  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  ALPN Negotiated: h2 for www.google.com
+[INFO]  H2Bridge running for www.google.com
+[INFO]  [Observe] POST www.google.com/ccm/collect?rcb=14&frm=2&auid=737513351.1782692648&en=page_view&dl=https%3A%2F%2Fa.claude.ai%2Fisolated-segment.html&top=https%3A%2F%2Fclaude.ai&scrsrc=www.googletagmanager.com&rnd=135278007.1784683877&navt=n&npa=0&gtm=45be67k1h1v9196940227za200zd9196940227xec&gcs=G111&gcd=13t3t3t3t5l1&dma=0&tag_exp=115616985~115938466~115938468~118897920~118897930~119773332~119896803&apve=1&apvf=f&apvc=1&tids=AW-16632748715&tid=AW-16632748715&tft=1784683876908&tfd=72&fmt=8  ct=[]  bodylen=0
+[INFO]  [Observe] POST www.google.com/ccm/collect?rcb=15&frm=2&auid=737513351.1782692648&en=page_view&dl=https%3A%2F%2Fa.claude.ai%2Fisolated-segment.html&top=https%3A%2F%2Fclaude.ai&scrsrc=www.googletagmanager.com&rnd=135278007.1784683877&navt=n&npa=0&gtm=45be67k1h1v9231740221za200zb9196940227zd9196940227xec&gcs=G111&gcd=13t3t3t3t5l1&dma=0&tag_exp=115938466~115938468~118897920~118897930~119773331~119896803&apve=1&apvf=f&apvc=0&tids=AW-11477462985&tid=AW-11477462985&tft=1784683876934&tfd=98&fmt=8  ct=[]  bodylen=0
+[INFO]  [Observe] POST www.google.com/ccm/collect?rcb=13&frm=2&auid=737513351.1782692648&en=page_view&dl=https%3A%2F%2Fa.claude.ai%2Fisolated-segment.html&top=https%3A%2F%2Fclaude.ai&scrsrc=www.googletagmanager.com&rnd=135278007.1784683877&navt=n&npa=0&gtm=45fe67k1h1v9227220020za200zb9196940227zd9196940227xec&gcs=G111&gcd=13t3t3t3t5l1&dma=0&tag_exp=115938466~115938469~118897920~118897930~119773332~119896803&apve=1&apvf=f&apvc=0&tids=DC-15684265&tid=DC-15684265&tft=1784683876937&tfd=101&fmt=8  ct=[]  bodylen=0
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=a91c677b-3e2c-4b1f-84f5-454c99dd4a53&batch_time=1784683877140&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15109  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=ee28c858-9a4f-485c-9b04-b14818206995&batch_time=1784683877147&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=16313  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=b76c26d8-5b79-47cd-888b-5083084bca2e&batch_time=1784683877176&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=16303  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=9d4fffa6-902f-4727-97ac-8185141dd49d&batch_time=1784683877301&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=16292  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=1602694c-d31a-4bca-87d7-c565416db34b&batch_time=1784683877325&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=16256  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=5b441df3-c92b-4506-b2aa-027c2eb30407&batch_time=1784683877442&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15843  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=c7155820-ff9f-41a9-b58e-8793200ced41&batch_time=1784683877447&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14629  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=bb02efa1-5407-420b-8a2d-7391ec7e43b1&batch_time=1784683877458&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14614  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=86599e39-e970-4887-a37b-5aff35782a1c&batch_time=1784683877592&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14625  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=48d9b351-4d49-43c3-9d8e-595f76ca5fb6&batch_time=1784683877607&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14631  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=c94fcc69-ae75-41a7-95fe-f4f9eb5a0ebb&batch_time=1784683877736&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14650  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=5d2e54eb-91a3-4407-a84b-e561970d8937&batch_time=1784683877755&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14841  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=75386af7-d016-41bf-95e7-693d682ace2c&batch_time=1784683877781&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14967  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=a674dcba-d678-40c7-adc5-b724d69025c4&batch_time=1784683877871&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14746  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=5278229c-557d-4819-93bb-ddaf87538abb&batch_time=1784683877900&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14866  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=f285e1e0-188c-453b-8cf0-aa86814a6323&batch_time=1784683878149&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14970  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  ALPN Negotiated: h2 for a-api.anthropic.com
+[INFO]  H2Bridge running for a-api.anthropic.com
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=16027  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=18098  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=18222  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=e213a4be-4e6f-4d95-9bef-5eb1fed36706&batch_time=1784683879344&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15983  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=4762  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=312  head={"events":[{"event_type":"HealthMetricEvent","ev
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=1480  head={"events":[{"event_type":"GrowthbookExperimentEv
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=1857  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST a-api.anthropic.com/v1/m  ct=[text/plain]  bodylen=1142  head={"series":[{"type":"Counter","metric":"analytics
+[INFO]  H2Bridge closed for api.anthropic.com
+[INFO]  H2Bridge closed for www.google.com
+[INFO]  [Observe] POST a-api.anthropic.com/v1/m  ct=[text/plain]  bodylen=138  head={"series":[{"type":"Counter","metric":"analytics
+[INFO]  H2Bridge closed for s-cdn.anthropic.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=d4b197b0-464c-4ec5-bbff-f9d0314c0943&batch_time=1784683909348&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15696  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  H2Bridge closed for api.anthropic.com
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=53979  head={"events":[{"event_type":"TelemetryEvent","event
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=23195  head={"events":[{"event_type":"ProductAnalyticsEvent"
+[INFO]  H2Bridge closed for a-api.anthropic.com
+[INFO]  H2Bridge closed for browser-intake-us5-datadoghq.com
+[INFO]  ALPN Negotiated: h2 for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge running for browser-intake-us5-datadoghq.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=5bb70a4b-d9b2-46e2-9c8a-7355923726fc&batch_time=1784683966233&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=5058  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST claude.ai/api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/chat_conversations/f596bb86-15b2-434c-9605-4dce1ea81525/completion  ct=[application/json]  bodylen=32595  head={"prompt":"","timezone":"Europe/London","locale"
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=a1c51ee9-165a-4811-9810-e057373c3f0e&batch_time=1784683980149&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15634  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=943022f4-39f5-492e-8db7-4314b98006ca&batch_time=1784683980863&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15255  head={"type":"action","_dd":{"format_version":2,"drif
+[INFO]  ALPN Negotiated: h2 for s-cdn.anthropic.com
+[INFO]  H2Bridge running for s-cdn.anthropic.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=3c53f2ae-39d2-4a63-afa7-aaf5e44fd901&batch_time=1784683981654&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=15695  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  ALPN Negotiated: h2 for assets-proxy.anthropic.com
+[INFO]  H2Bridge running for assets-proxy.anthropic.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=49db0a4e-abca-4812-9783-ba0f879ab998&batch_time=1784683983204&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=13243  head={"type":"long_task","_dd":{"format_version":2,"d
+[INFO]  ALPN Negotiated: h2 for a-api.anthropic.com
+[INFO]  H2Bridge running for a-api.anthropic.com
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=15863  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=383  head={"events":[{"event_type":"GrowthbookExperimentEv
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=994  head={"events":[{"event_type":"HealthMetricEvent","ev
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=04f04321-1e36-49a0-976d-9929e23bf1f1&batch_time=1784683990466&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=16006  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=2060  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  [Observe] POST claude.ai/api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/chat_conversations/f596bb86-15b2-434c-9605-4dce1ea81525/title  ct=[application/json]  bodylen=845  head={"message_content":"Message 1:\n\n\n\nMessage 2:
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=9bb9380a-6ef0-4ffa-aded-03f7fc838e32&batch_time=1784684001192&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=14173  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  H2Bridge closed for s-cdn.anthropic.com
+[INFO]  H2Bridge closed for assets-proxy.anthropic.com
+[INFO]  H2Bridge closed for a-api.anthropic.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=afc68bba-abb3-41dd-a51d-3506d90eaf5a&batch_time=1784684031195&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=16288  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=8249  head={"events":[{"event_type":"ProductAnalyticsEvent"
+[INFO]  H2Bridge closed for browser-intake-us5-datadoghq.com
+[INFO]  ALPN Negotiated: h2 for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge running for browser-intake-us5-datadoghq.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=f42e52a8-24e3-4bf5-8dc3-cb13e3e12389&batch_time=1784684070514&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=4766  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  H2Bridge closed for browser-intake-us5-datadoghq.com
+[INFO]  ALPN Negotiated: h2 for a-api.anthropic.com
+[INFO]  H2Bridge running for a-api.anthropic.com
+[INFO]  [Observe] POST a-api.anthropic.com/v1/b  ct=[text/plain]  bodylen=2060  head={"writeKey":"LKJN8LsLERHEOXkw487o7qCTFOrGPimI","
+[INFO]  ALPN Negotiated: h2 for browser-intake-us5-datadoghq.com
+[INFO]  H2Bridge running for browser-intake-us5-datadoghq.com
+[INFO]  [Observe] POST browser-intake-us5-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub71869dceb5b70dba6123af9ca357d1f9&dd-evp-origin-version=6.31.0&dd-evp-origin=browser&dd-request-id=38bf9279-dda3-4ac6-a0f9-c140c075c0b6&batch_time=1784684285051&_dd.api=fetch  ct=[text/plain;charset=UTF-8]  bodylen=12290  head={"type":"resource","_dd":{"format_version":2,"dr
+[INFO]  H2Bridge closed for a-api.anthropic.com
+[INFO]  H2Bridge closed for browser-intake-us5-datadoghq.com
+[INFO]  [Observe] POST claude.ai/api/event_logging/v2/batch  ct=[application/json]  bodylen=853  head={"events":[{"event_type":"ProductAnalyticsEvent"
