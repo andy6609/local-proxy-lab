@@ -344,8 +344,12 @@ void Http2Engine::process(Context& ctx) {
         if (cWW) FD_SET(br.csock, &wfds);
         if (uWW) FD_SET(br.usock, &wfds);
 
+        int nfds = 0;
+#ifndef _WIN32
+        nfds = std::max((int)br.csock, (int)br.usock) + 1;
+#endif
         timeval tv; tv.tv_sec = 30; tv.tv_usec = 0;
-        int r = select(0, &rfds, &wfds, nullptr, &tv);
+        int r = select(nfds, &rfds, &wfds, nullptr, &tv);
         if (r <= 0) break;
 
         if (FD_ISSET(br.csock, &rfds)) {

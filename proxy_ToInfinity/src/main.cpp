@@ -1,9 +1,13 @@
 #include <iostream>
+#include <signal.h>
 #include "Core/Logger.h"
 #include "Core/ProxyServer.h"
 #include "Crypto/TlsManager.h"
 
 int main() {
+#ifndef _WIN32
+    signal(SIGPIPE, SIG_IGN);
+#endif
     proxy::Logger::init(proxy::Logger::Level::DEBUG);
     proxy::Logger::info("proxy_ToInfinity starting...");
     
