@@ -152,6 +152,22 @@ void TrafficAnalyzer::analyzeRequest(const std::string& method,
     Logger::info("[Observe] " + method + " " + host + url + "  ct=[" + contentType + "]  bodylen=" +
                  std::to_string(body.size()) + extra + (head.empty() ? "" : ("  head=" + head)));
 
+    // [NEW] Raw Payload Dumper: claude 또는 chatgpt 호스트에 대한 POST 요청 원본을 디스크에 덤프
+    if (method == "POST" && !body.empty() && (host.find("claude") != std::string::npos || host.find("chatgpt") != std::string::npos)) {
+        static std::atomic<unsigned> dumpSeq{0};
+        unsigned seq = ++dumpSeq;
+        std::filesystem::create_directories("captured_files/raw_dumps");
+        std::string fname = "captured_files/raw_dumps/" + std::to_string(seq) + "_raw_dump.txt";
+        std::ofstream ofs(fname, std::ios::binary);
+        if (ofs) {
+            ofs << method << " " << url << "\r\n";
+            ofs << headers << "\r\n\r\n";
+            ofs << body;
+            ofs.close();
+            Logger::info("[Dumper] Raw payload dumped to " + fname);
+        }
+    }
+
     if (!contentType.empty()) {
         routeToParser(host, url, contentType, headers, body);
     }
