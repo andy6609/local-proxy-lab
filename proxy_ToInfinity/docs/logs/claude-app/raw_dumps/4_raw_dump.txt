@@ -1,0 +1,55 @@
+POST /api/event_logging/v2/batch
+Host: claude.ai
+content-length: 668
+accept: */*
+accept-language: ko
+anthropic-client-app: com.anthropic.claudefordesktop
+anthropic-client-os-platform: darwin
+anthropic-client-os-version: 26.5.0
+anthropic-client-platform: desktop_app
+anthropic-client-version: 1.18286.2
+anthropic-desktop-topbar: 1
+content-type: application/json
+cookie: anthropic-device-id=2cc71fe0-2801-41b6-a603-b84dc3ede3ab
+cookie: CH-prefers-color-scheme=dark
+cookie: __ssid=8d57778f-d6aa-4c6b-8f44-8d04160fc079
+cookie: anthropic-consent-preferences=%7B%22analytics%22%3Atrue%2C%22marketing%22%3Atrue%7D
+cookie: _fbp=fb.1.1773962272543.50501668106609700
+cookie: ajs_anonymous_id=claudeai.v1.f1738f41-e720-4ee6-aeea-2993f2c854cd
+cookie: sessionKey=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
+cookie: lastActiveOrg=efeb8236-bb4a-47f7-9eb0-d4837a8dda96
+cookie: user-sidebar-visible-on-load=true
+cookie: intercom-device-id-lupk8zyo=6bc3c9b2-df68-4301-bea3-b23966cdcec9
+cookie: ajs_user_id=a96a51d0-5372-457e-b1c6-b344241a9ee0
+cookie: user-local-recents-collapsed=false
+cookie: sessionKeyLC=1775781269564
+cookie: _gcl_au=1.1.737513351.1782692648
+cookie: anthropic-bootstrap-seam=1
+cookie: intercom-session-lupk8zyo=ZGFoa2Nkb1FOejVDMkttR3R6TUxTSmx4UTZGZFhKSVdMZ0lzSytrUVlLU1RNYWF4QkNtN0pyYndRMjZSQTNteW40a091dkIyQVFXdXJxQk1POFRhU2M5R0Z3WmtRUTZkVjh4aFM3R01vMXQzczN0TTlmT0J4Y2F6enY4RzVBRklSSWhaWnpZVzBtMDUxcm5tSnZ5UGg0Q1UzazJKMytiaVRVY3dkUStNRnVadGU0SzVWSlIwY2diZ3ExS2hYM3NjeFhwd011bEdOdjZGODQ2MkdHUExHVUZMN09nN1lkZG5LUlNreTVLREhncXN0UDBwRlZMeTdDUERya2RnaGtOZmFHMXZCdWFTQzR5MmRObXdEbzBocnh2Rk1uMUlVd3hUZ2x1RE40eVlmSHc9LS1MM1NmTm94LzlqV2tsbndBTS9mdUJ3PT0=--6bcdcc72d2eb474b4a49d0660a6673b98233087f
+cookie: activitySessionId=d1d6c82a-a659-4ec4-99dc-d139de46c810
+cookie: cf_clearance=p8F9rFdQlZPuu_pJbHkbb8gMr8WyGVuE4D6CaoL476g-1784683867-1.2.1.1-Sn_UMnZI4.SePwKHixSvyj20iN6ZjFSo.lRAx7x9YC.AGrGjHnQrBw_TN3KEsaJv76Oox71m5twgZagTOZwkIs8f5hAecrkXyZv6W_aMeV8WoZkTnNifiKzqYi9HFwXv3tfs1IPkzbKcXnuG_SSrP22ugPw5Qq3P22BOHjJv8mQE3cFV5DWJDmPGjj4g6c2QtZQX2wAQdrVYrnaWAEvV8v9jKwRLk2p7SJ1x9S45zzrPbuqc3hcZQPDmUzXQfSvwxwHexRSipaRQzgr8g9phUSbv2mBVc31J2618sCT_UKB_8iVc03Kc9vTUWFWt375uJE9vP9DgeDz6dSdMgy9TRg
+cookie: __cf_bm=6l4B0iJdeW09k04VKSpEtoDobW_LILKcKMN9vEFev9I-1784683867.534622-1.0.1.1-TVECgdV8rNTJ0Okz_mDzJr9KEpuMGY_6lfYvQJS9i2dCWOqBXheD2HEfH2un1yaFr_3RorAhXLo9NNqxjBt36diAonGfVmmm5XKHlFjt.gTZewzhj1G34LHNXalJV92L
+cookie: ion-vk=dc8c6076-dce6-4a1d-9f0e-0e756acf8dc6
+cookie: _cfuvid=w1M.dyJwijLRBzloZXrInAsScKrWOz4dxZubf_xE1Fw-1784683877.713657-1.0.1.1-I2QNG_vTZBFn8WUGBvos3gQjOxs9jaDzS2IHe7pFHQQ
+cookie: _dd_s=aid=d44cd3c3-1c12-4d89-b751-dd6223c923a0&rum=2&id=96ede5ca-d53f-4cc2-b892-5cbe17b79186&created=1784683778276&expire=1784685576681
+origin: https://claude.ai
+referer: https://claude.ai/chat/f596bb86-15b2-434c-9605-4dce1ea81525
+sec-ch-ua: "Not/A)Brand";v="99", "Chromium";v="148"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "macOS"
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+traceparent: 00-00000000000000007d806f7b904862b6-5814fbfd3ba68e4a-01
+tracestate: dd=s:1;o:rum
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.18286.2 Chrome/148.0.7778.271 Electron/42.5.1 Safari/537.36
+x-datadog-origin: rum
+x-datadog-parent-id: 6346974839917940298
+x-datadog-sampling-priority: 1
+x-datadog-trace-id: 9043350628252279478
+x-organization-uuid: efeb8236-bb4a-47f7-9eb0-d4837a8dda96
+x-service-name: claude_ai_web
+priority: u=1, i
+
+
+{"events":[{"event_type":"HealthMetricEvent","event_data":{"event_id":"c49db12a-3c2d-4218-850a-dde935b13453","event_timestamp":"2026-07-22T01:44:31.625Z","action":"chat.file_upload","surface":"chat","outcome":"success","variant":"ContentExtractorHandler","app_version":"d8ab11fbd8","platform":"desktop","first_party_host":true,"duration_ms":1007}},{"event_type":"HealthMetricEvent","event_data":{"event_id":"08940b6c-00b9-4ca9-b2b6-2263e82cde58","event_timestamp":"2026-07-22T01:44:36.640Z","action":"chat.message_send","surface":"chat","outcome":"success","model":"claude-haiku-4-5-20251001","app_version":"d8ab11fbd8","platform":"desktop","first_party_host":true}}]}
