@@ -1,0 +1,367 @@
+POST /api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/conversations/0ce819b5-907c-4f14-90d2-c4bd3af4bfe0/wiggle/upload-file
+Host: claude.ai
+content-length: 7584
+x-datadog-origin: rum
+x-datadog-parent-id: 3794941542513180692
+sec-ch-ua-platform: "macOS"
+sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"
+sec-ch-ua-mobile: ?0
+x-datadog-trace-id: 6590528072284391201
+traceparent: 00-00000000000000005b76425d16c04721-34aa5739f8df0014-01
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36
+content-type: multipart/form-data; boundary=----WebKitFormBoundaryiV53AQm9OVgMHARh
+tracestate: dd=s:1;o:rum
+x-datadog-sampling-priority: 1
+accept: */*
+origin: https://claude.ai
+sec-fetch-site: same-origin
+sec-fetch-mode: cors
+sec-fetch-dest: empty
+referer: https://claude.ai/new
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: _fbp=fb.1.1784682844983.86279494802427900
+cookie: anthropic-device-id=4ee22460-c5ed-4363-9005-145c27effe9b
+cookie: activitySessionId=546df22d-d818-4d5b-a565-bca01d7879ec
+cookie: user-sidebar-visible-on-load=true
+cookie: CH-prefers-color-scheme=dark
+cookie: __ssid=3bac424f-a987-4846-a302-6294f28cb4f9
+cookie: ajs_anonymous_id=claudeai.v1.9c3df768-dc72-479b-8df9-14fb5949404b
+cookie: _gcl_au=1.1.364681199.1784682924
+cookie: sessionKey=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
+cookie: sessionKeyLC=1784683037092
+cookie: routingHint=sk-ant-rh-eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJFUzI1NiIsICJraWQiOiAiN0MxcWFPRnhqdWxaUjRFQnNuNk1UeUZGNWdDV2JHbFpNVDR2RklrRFFpbyJ9.eyJzdWIiOiAiYTk2YTUxZDAtNTM3Mi00NTdlLWIxYzYtYjM0NDI0MWE5ZWUwIiwgImlhdCI6IDE3ODQ2ODMwMzcsICJpc3MiOiAiY2xhdWRlLWFpLXJvdXRpbmciLCAib25ib2FyZGluZ19jb21wbGV0ZSI6IHRydWUsICJwaG9uZV92ZXJpZmllZCI6IGZhbHNlLCAiYWdlX3ZlcmlmaWVkIjogdHJ1ZSwgIm5hbWUiOiAiXHVjNzc0XHViM2Q5XHVjNzI0In0.mCo5FypK-bUjrRph-JIBZrayrFsM6Ok1wbDXpn2zrjd3QTaAWfi0IIvfpCTEXfs-uO388Ofwwl8d6mZHjDlleQ
+cookie: lastActiveOrg=efeb8236-bb4a-47f7-9eb0-d4837a8dda96
+cookie: user-sidebar-pinned=false
+cookie: ion-vk=8c39d0ac-b607-456e-898d-4b139887f499
+cookie: _cfuvid=eIJnVD2WBhxJ75Y.obBraM7MFocYZagorTBMe30Fru4-1784685154.3414617-1.0.1.1-EvcSuNXnpQ_Pl1h8Qt2I5V02ghoTQcbv4.1OPNAb4qc
+cookie: cf_clearance=d2Z2_sQrwGRKgmiP2N9B78IIgeuc9v0ivsQ2Jq9MxTA-1784685155-1.2.1.1-eL_mPp59Xdwl99iUNYaZqdu4I9l4KbHvmyrFNviJ4lw7r.pUuiTxmL9QOTLfkuACZ__yKEg_EO3Nb3o8GkYxF4_Iuj7KYUUP.BeFXExR0BwdZB9zZhSPsE2sKJRUl1vNl1D5x..hLw42.OSJOcyGg_JjcW.TFhoTa6sbysTHacosuMn4xhYRSY7dmNsJIQBF8RLwilh9FjS90N3PMo18xEvLCfxeFe3h51v7Oe3xJyLz1D7_vo0g7kcZltJ8LZJ56gnf.ot2mrzJzFNuJq2N6oujk7x98nfuyw3v8hcrjGUHuSJfnaR5qFl42JLSkeQTSiR_YTS_fRrRoluiJWpCIA
+cookie: __cf_bm=.iwpYqU_Dfg2JYo0xhtwooQWyGrtikZiydYRRkuZF_0-1784685155.3866475-1.0.1.1-I1qKAiYsNH.BIe1biSacc55KN3aMr.fp0fsvBhGQ.8S2SMFnl1Sl1cClsenCSSzUfWTiAMl0g1kp185xKSiWY_YozHTMqP1XAiJN6i2UjAqMJo4NL2f5BMyDXb463yDu
+cookie: _dd_s=aid=7da22a8c-7c4f-4a50-af12-c6c6c333f494&rum=2&id=a2e46b75-e3eb-4337-9675-783ce23bd6a1&created=1784685152463&expire=1784686059191
+priority: u=1, i
+
+
+------WebKitFormBoundaryiV53AQm9OVgMHARh
+Content-Disposition: form-data; name="file"; filename="distributor.go"
+Content-Type: application/octet-stream
+
+package gol
+
+import (
+	"fmt"
+	"sync"
+	"time"
+
+	"uk.ac.bris.cs/gameoflife/util"
+)
+
+type distributorChannels struct {
+	events     chan<- Event
+	ioCommand  chan<- ioCommand
+	ioIdle     <-chan bool
+	ioFilename chan<- string
+	ioOutput   chan<- uint8
+	ioInput    <-chan uint8
+}
+
+type golParams struct {
+	turns       int
+	imageWidth  int
+	imageHeight int
+}
+
+func countAliveNeighbors(x, y int, world [][]byte, width, height int) int {
+	count := 0
+	for dx := -1; dx <= 1; dx++ {
+		for dy := -1; dy <= 1; dy++ {
+			if dx == 0 && dy == 0 {
+				continue // Skip the cell itself
+			}
+			// Wrap around the edges (toroidal world)
+			nx := (x + dx + width) % width
+			ny := (y + dy + height) % height
+			if world[ny][nx] == 255 {
+				count++
+			}
+		}
+	}
+	return count
+}
+
+type workerResult struct {
+	startY int
+	endY   int
+	world  [][]byte
+}
+
+func worker(startY, endY int, world [][]byte, p golParams, out chan<- workerResult, flippedCells chan<- []util.Cell) {
+	newWorld := make([][]byte, endY-startY)
+	for i := range newWorld {
+		newWorld[i] = make([]byte, p.imageWidth)
+	}
+
+	var flipped []util.Cell
+
+	for y := startY; y < endY; y++ {
+		for x := 0; x < p.imageWidth; x++ {
+			neighbors := countAliveNeighbors(x, y, world, p.imageWidth, p.imageHeight)
+			localY := y - startY
+
+			// check state changed
+			oldState := world[y][x]
+			var newState byte
+			if oldState == 255 {
+				if neighbors < 2 || neighbors > 3 {
+					newState = 0
+				} else {
+					newState = 255
+				}
+			} else {
+				if neighbors == 3 {
+					newState = 255
+				} else {
+					newState = 0
+				}
+			}
+			newWorld[localY][x] = newState
+
+			// if state changed, add to flipped
+			if oldState != newState {
+				flipped = append(flipped, util.Cell{X: x, Y: y})
+			}
+		}
+	}
+
+	out <- workerResult{startY, endY, newWorld}
+	if len(flipped) > 0 {
+		flippedCells <- flipped
+	}
+}
+
+func calculateNextState(p golParams, threads int, world [][]byte, c distributorChannels, turn int) [][]byte {
+	height := p.imageHeight
+	workerHeight := height / threads
+
+	out := make(chan workerResult, threads)
+	flippedCells := make(chan []util.Cell, threads)
+
+	var wg sync.WaitGroup
+
+	// Start workers
+	for i := 0; i < threads; i++ {
+		startY := i * workerHeight
+		endY := startY + workerHeight
+		if i == threads-1 {
+			endY = height
+		}
+
+		wg.Add(1)
+		go func(sy, ey int) {
+			defer wg.Done()
+			worker(sy, ey, world, p, out, flippedCells)
+		}(startY, endY)
+	}
+
+	// Create new world
+	newWorld := make([][]byte, height)
+	for i := range newWorld {
+		newWorld[i] = make([]byte, p.imageWidth)
+	}
+
+	var allFlipped [][]util.Cell
+	done := make(chan struct{})
+
+	// 1. flippedCells 수집 고루틴 시작
+	go func() {
+		for cells := range flippedCells {
+			if len(cells) > 0 {
+				allFlipped = append(allFlipped, cells)
+			}
+		}
+		close(done)
+	}()
+
+	// 2. 모든 worker의 결과를 먼저 수집
+	for i := 0; i < threads; i++ {
+		result := <-out
+		for y := 0; y < result.endY-result.startY; y++ {
+			copy(newWorld[result.startY+y], result.world[y])
+		}
+	}
+
+	// 3. worker 들이 flippedCells 전송을 끝낸 뒤 채널을 닫는다.
+	go func() {
+		// 위에서 out 을 다 받았으므로, 여기서 다시 threads 만큼 out 을
+		// 읽어 worker 고루틴이 완전히 return 할 때까지 대기한 뒤 닫는다.
+		wg.Wait()
+		close(flippedCells)
+	}()
+	<-done // flippedCells 수집 고루틴이 끝날 때까지 대기
+
+	// 4. 수집된 모든 flipped cells 처리
+	for _, cells := range allFlipped {
+		c.events <- CellsFlipped{CompletedTurns: turn, Cells: cells}
+	}
+
+	return newWorld
+}
+
+// distributor divides the work between workers and interacts with other goroutines.
+func distributor(p Params, c distributorChannels, keyPresses <-chan rune) {
+
+	// TODO: Create a 2D slice to store the world.
+	world := make([][]byte, p.ImageHeight)
+	for i := range world {
+		world[i] = make([]byte, p.ImageWidth)
+	}
+
+	// Request the io goroutine to read the image file
+	c.ioCommand <- ioInput
+	c.ioFilename <- fmt.Sprintf("%dx%d", p.ImageWidth, p.ImageHeight)
+
+	// Read the image data from the io goroutine
+	for y := 0; y < p.ImageHeight; y++ {
+		for x := 0; x < p.ImageWidth; x++ {
+			val := <-c.ioInput
+			world[y][x] = val
+		}
+	}
+
+	// cell flipped event
+	for y := 0; y < p.ImageHeight; y++ {
+		for x := 0; x < p.ImageWidth; x++ {
+			if world[y][x] == 255 {
+				c.events <- CellFlipped{0, util.Cell{X: x, Y: y}}
+			}
+		}
+	}
+
+	// AliveCellsCount 이벤트 주기 관리용 타임스탬프
+	lastAliveTime := time.Now()
+
+	turn := 0
+	completedTurns := 0
+	isPaused := false
+	done := false
+
+	// 초기 상태 알림
+	c.events <- StateChange{turn, Executing}
+
+	// p.Turns가 0이면 바로 종료하도록 추가
+	if p.Turns == 0 {
+		done = true
+	}
+
+	// 별도 ticker 고루틴 제거: AliveCellsCount 는 메인 루프에서 2초마다 전송
+
+	// 메인 게임 루프
+	for !done {
+		select {
+		case key := <-keyPresses:
+			switch key {
+			case 'p':
+				isPaused = !isPaused
+				if isPaused {
+					c.events <- StateChange{completedTurns, Paused}
+				} else {
+					c.events <- StateChange{completedTurns, Executing}
+				}
+			case 's':
+				c.ioCommand <- ioOutput
+				filename := fmt.Sprintf("%dx%dx%d", p.ImageWidth, p.ImageHeight, completedTurns)
+				c.ioFilename <- filename
+				for y := 0; y < p.ImageHeight; y++ {
+					for x := 0; x < p.ImageWidth; x++ {
+						c.ioOutput <- world[y][x]
+					}
+				}
+				// Make sure the I/O has finished
+				c.ioCommand <- ioCheckIdle
+				<-c.ioIdle
+				c.events <- ImageOutputComplete{completedTurns, filename}
+			case 'q':
+				done = true
+			}
+		default:
+			// 2초 주기로 AliveCellsCount 이벤트 전송
+			if time.Since(lastAliveTime) >= 2*time.Second {
+				alive := 0
+				for y := 0; y < p.ImageHeight; y++ {
+					for x := 0; x < p.ImageWidth; x++ {
+						if world[y][x] == 255 {
+							alive++
+						}
+					}
+				}
+				c.events <- AliveCellsCount{completedTurns, alive}
+				lastAliveTime = time.Now()
+			}
+			if !isPaused && turn < p.Turns {
+				// 1. 다음 상태 계산 및 CellsFlipped 이벤트 전송
+				world = calculateNextState(
+					golParams{
+						turns:       p.Turns,
+						imageWidth:  p.ImageWidth,
+						imageHeight: p.ImageHeight,
+					},
+					p.Threads,
+					world,
+					c,
+					turn,
+				)
+
+				// 2. 턴 완료 처리
+				completedTurns++
+
+				// 3. TurnComplete 이벤트 전송
+				c.events <- TurnComplete{completedTurns}
+
+				turn++
+
+				// 모든 턴이 완료되었는지 확인
+				if turn >= p.Turns {
+					done = true
+				}
+			}
+			if isPaused {
+				time.Sleep(1 * time.Millisecond)
+			}
+		}
+	}
+
+	// 살아있는 셀 계산
+	var aliveCells []util.Cell
+	for y := 0; y < p.ImageHeight; y++ {
+		for x := 0; x < p.ImageWidth; x++ {
+			if world[y][x] == 255 {
+				aliveCells = append(aliveCells, util.Cell{X: x, Y: y})
+			}
+		}
+	}
+
+	// 종료 이벤트 순서
+	// 1. FinalTurnComplete
+	c.events <- FinalTurnComplete{CompletedTurns: completedTurns, Alive: aliveCells}
+
+	// 2. 최종 상태 저장
+	c.ioCommand <- ioOutput
+	filename := fmt.Sprintf("%dx%dx%d", p.ImageWidth, p.ImageHeight, completedTurns)
+	c.ioFilename <- filename
+	for y := 0; y < p.ImageHeight; y++ {
+		for x := 0; x < p.ImageWidth; x++ {
+			c.ioOutput <- world[y][x]
+		}
+	}
+	c.ioCommand <- ioCheckIdle
+	<-c.ioIdle
+
+	// 3. ImageOutputComplete
+	c.events <- ImageOutputComplete{completedTurns, filename}
+
+	// 4. StateChange Quitting
+	c.events <- StateChange{completedTurns, Quitting}
+
+	// 5. 이벤트 채널 닫기
+	close(c.events)
+}
+
+------WebKitFormBoundaryiV53AQm9OVgMHARh--

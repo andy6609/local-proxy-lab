@@ -1,0 +1,50 @@
+POST /api/organizations/efeb8236-bb4a-47f7-9eb0-d4837a8dda96/chat_conversations/0ce819b5-907c-4f14-90d2-c4bd3af4bfe0/title
+Host: claude.ai
+content-length: 604
+anthropic-anonymous-id: claudeai.v1.9c3df768-dc72-479b-8df9-14fb5949404b
+x-activity-session-id: 546df22d-d818-4d5b-a565-bca01d7879ec
+x-datadog-parent-id: 6728767504335413498
+sec-ch-ua-platform: "macOS"
+sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"
+sec-ch-ua-mobile: ?0
+anthropic-client-sha: d8ab11fbd8a22fc55cbf5c87f77131406652ebb8
+x-datadog-trace-id: 6870168910558128004
+traceparent: 00-00000000000000005f57be3974bfe784-5d616265081aa0fa-01
+anthropic-client-build: 1784678303
+content-type: application/json
+anthropic-client-platform: web_claude_ai
+tracestate: dd=s:1;o:rum
+x-datadog-origin: rum
+anthropic-device-id: 4ee22460-c5ed-4363-9005-145c27effe9b
+anthropic-client-version: 1.0.0
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36
+x-datadog-sampling-priority: 1
+accept: */*
+origin: https://claude.ai
+sec-fetch-site: same-origin
+sec-fetch-mode: cors
+sec-fetch-dest: empty
+referer: https://claude.ai/chat/0ce819b5-907c-4f14-90d2-c4bd3af4bfe0
+accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+cookie: _fbp=fb.1.1784682844983.86279494802427900
+cookie: anthropic-device-id=4ee22460-c5ed-4363-9005-145c27effe9b
+cookie: activitySessionId=546df22d-d818-4d5b-a565-bca01d7879ec
+cookie: user-sidebar-visible-on-load=true
+cookie: CH-prefers-color-scheme=dark
+cookie: __ssid=3bac424f-a987-4846-a302-6294f28cb4f9
+cookie: ajs_anonymous_id=claudeai.v1.9c3df768-dc72-479b-8df9-14fb5949404b
+cookie: _gcl_au=1.1.364681199.1784682924
+cookie: sessionKey=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
+cookie: sessionKeyLC=1784683037092
+cookie: routingHint=sk-ant-rh-eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJFUzI1NiIsICJraWQiOiAiN0MxcWFPRnhqdWxaUjRFQnNuNk1UeUZGNWdDV2JHbFpNVDR2RklrRFFpbyJ9.eyJzdWIiOiAiYTk2YTUxZDAtNTM3Mi00NTdlLWIxYzYtYjM0NDI0MWE5ZWUwIiwgImlhdCI6IDE3ODQ2ODMwMzcsICJpc3MiOiAiY2xhdWRlLWFpLXJvdXRpbmciLCAib25ib2FyZGluZ19jb21wbGV0ZSI6IHRydWUsICJwaG9uZV92ZXJpZmllZCI6IGZhbHNlLCAiYWdlX3ZlcmlmaWVkIjogdHJ1ZSwgIm5hbWUiOiAiXHVjNzc0XHViM2Q5XHVjNzI0In0.mCo5FypK-bUjrRph-JIBZrayrFsM6Ok1wbDXpn2zrjd3QTaAWfi0IIvfpCTEXfs-uO388Ofwwl8d6mZHjDlleQ
+cookie: lastActiveOrg=efeb8236-bb4a-47f7-9eb0-d4837a8dda96
+cookie: user-sidebar-pinned=false
+cookie: ion-vk=8c39d0ac-b607-456e-898d-4b139887f499
+cookie: _cfuvid=eIJnVD2WBhxJ75Y.obBraM7MFocYZagorTBMe30Fru4-1784685154.3414617-1.0.1.1-EvcSuNXnpQ_Pl1h8Qt2I5V02ghoTQcbv4.1OPNAb4qc
+cookie: cf_clearance=d2Z2_sQrwGRKgmiP2N9B78IIgeuc9v0ivsQ2Jq9MxTA-1784685155-1.2.1.1-eL_mPp59Xdwl99iUNYaZqdu4I9l4KbHvmyrFNviJ4lw7r.pUuiTxmL9QOTLfkuACZ__yKEg_EO3Nb3o8GkYxF4_Iuj7KYUUP.BeFXExR0BwdZB9zZhSPsE2sKJRUl1vNl1D5x..hLw42.OSJOcyGg_JjcW.TFhoTa6sbysTHacosuMn4xhYRSY7dmNsJIQBF8RLwilh9FjS90N3PMo18xEvLCfxeFe3h51v7Oe3xJyLz1D7_vo0g7kcZltJ8LZJ56gnf.ot2mrzJzFNuJq2N6oujk7x98nfuyw3v8hcrjGUHuSJfnaR5qFl42JLSkeQTSiR_YTS_fRrRoluiJWpCIA
+cookie: __cf_bm=.iwpYqU_Dfg2JYo0xhtwooQWyGrtikZiydYRRkuZF_0-1784685155.3866475-1.0.1.1-I1qKAiYsNH.BIe1biSacc55KN3aMr.fp0fsvBhGQ.8S2SMFnl1Sl1cClsenCSSzUfWTiAMl0g1kp185xKSiWY_YozHTMqP1XAiJN6i2UjAqMJo4NL2f5BMyDXb463yDu
+cookie: _dd_s=aid=7da22a8c-7c4f-4a50-af12-c6c6c333f494&rum=2&id=a2e46b75-e3eb-4337-9675-783ce23bd6a1&created=1784685152463&expire=1784686082856
+priority: u=1, i
+
+
+{"message_content":"Message 1:\n\n\n\nMessage 2:\n\n# Code Review: Game of Life Distributor\n\nLooking at your `distributor.go`, this is a solid multi-threaded implementation of Conway's Game of Life with good use of Go's concurrency patterns. Here's my analysis:\n\n## ✅ Strengths\n\n1. **Proper synchroniza\n\n  [...]\n\n  ulateNextState, validate worker distribution\nif threads > height {\n    threads = height  // Cap at grid height\n}\n```\n\nWould you like me to suggest a refactored version addressing any of these points, or do you have specific questions about the logic?","recent_titles":[]}
