@@ -152,8 +152,8 @@ void TrafficAnalyzer::analyzeRequest(const std::string& method,
     Logger::info("[Observe] " + method + " " + host + url + "  ct=[" + contentType + "]  bodylen=" +
                  std::to_string(body.size()) + extra + (head.empty() ? "" : ("  head=" + head)));
 
-    // [NEW] Raw Payload Dumper: claude, chatgpt, gemini, aistudio, google 호스트에 대한 POST 요청 원본을 디스크에 덤프
-    if (method == "POST" && !body.empty() && 
+    // [NEW] Raw Payload Dumper: claude, chatgpt, gemini, aistudio, google 호스트에 대한 POST/PUT/PATCH 요청 원본을 디스크에 덤프
+    if ((method == "POST" || method == "PUT" || method == "PATCH") && !body.empty() && 
        (host.find("claude") != std::string::npos || 
         host.find("chatgpt") != std::string::npos || 
         host.find("gemini") != std::string::npos || 
