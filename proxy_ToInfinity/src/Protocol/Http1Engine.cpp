@@ -4,7 +4,6 @@
 #include "Crypto/TlsManager.h"
 #include "Inspector/TrafficAnalyzer.h"
 
-#include <ws2tcpip.h>
 #include <string>
 #include <vector>
 #include <algorithm>

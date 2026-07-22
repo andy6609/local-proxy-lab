@@ -2,12 +2,7 @@
 #include "Core/Logger.h"
 #include "Inspector/TrafficAnalyzer.h"
 
-// MSVC SSIZE_T 포팅
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-
 #include <nghttp2/nghttp2.h>
-#include <ws2tcpip.h>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -287,8 +282,7 @@ static nghttp2_session_callbacks* makeCallbacks(bool isServerSide) {
 }
 
 static void setNonBlocking(SOCKET s) {
-    u_long mode = 1;
-    ioctlsocket(s, FIONBIO, &mode);
+    setNonBlockingPlatform(s);
 }
 
 static bool pumpRecv(SSL* ssl, nghttp2_session* sess, bool& closed) {

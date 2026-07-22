@@ -29,26 +29,38 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
 find_package(OpenSSL REQUIRED)
 
-# zlib(gzip/deflate)·brotli(br) — Content-Encoding 해제용. 둘 다 CMake config 제공.
+# zlib(gzip/deflate)·brotli(br) — Content-Encoding 해제용
 find_package(ZLIB REQUIRED)
-find_package(unofficial-brotli CONFIG REQUIRED)
 
-# vcpkg의 nghttp2 포트는 CMake config(find_package)를 제공하지 않으므로
-# import 라이브러리(nghttp2.lib)를 직접 찾아 링크한다.
-find_library(NGHTTP2_LIBRARY NAMES nghttp2 REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    OpenSSL::SSL
-    OpenSSL::Crypto
-    ${NGHTTP2_LIBRARY}
-    ZLIB::ZLIB
-    unofficial::brotli::brotlidec
-    unofficial::brotli::brotlicommon
-)
-
-# Windows 소켓/인증서 라이브러리
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ws2_32 crypt32)
+    # vcpkg 환경 (Windows)
+    find_package(unofficial-brotli CONFIG REQUIRED)
+    find_library(NGHTTP2_LIBRARY NAMES nghttp2 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        ${NGHTTP2_LIBRARY}
+        ZLIB::ZLIB
+        unofficial::brotli::brotlidec
+        unofficial::brotli::brotlicommon
+        ws2_32 crypt32
+    )
+else()
+    # Homebrew 환경 (Mac/Linux)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(BROTLI REQUIRED libbrotlidec libbrotlicommon)
+    pkg_check_modules(NGHTTP2 REQUIRED libnghttp2)
+    
+    target_include_directories(${PROJECT_NAME} PRIVATE ${NGHTTP2_INCLUDE_DIRS} ${BROTLI_INCLUDE_DIRS})
+    target_link_directories(${PROJECT_NAME} PRIVATE ${NGHTTP2_LIBRARY_DIRS} ${BROTLI_LIBRARY_DIRS})
+    
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        ${NGHTTP2_LIBRARIES}
+        ZLIB::ZLIB
+        ${BROTLI_LIBRARIES}
+    )
 endif()
 
 # 한글 UTF-8 주석 경고(C4819) 방지

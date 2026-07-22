@@ -4,18 +4,21 @@
 #include "Protocol/Http1Engine.h"
 
 #include <thread>
-#include <ws2tcpip.h>
 
 namespace proxy {
 
 ProxyServer::ProxyServer(int port) : port_(port) {
+#ifdef _WIN32
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
+#endif
 }
 
 ProxyServer::~ProxyServer() {
     stop();
+#ifdef _WIN32
     WSACleanup();
+#endif
 }
 
 void ProxyServer::start() {
@@ -64,7 +67,7 @@ void ProxyServer::stop() {
 void ProxyServer::acceptLoop() {
     while (isRunning_) {
         sockaddr_in clientAddr;
-        int clientLen = sizeof(clientAddr);
+        socklen_t clientLen = sizeof(clientAddr);
         SOCKET clientSock = accept(listenSocket_, (sockaddr*)&clientAddr, &clientLen);
         
         if (!isRunning_) break;

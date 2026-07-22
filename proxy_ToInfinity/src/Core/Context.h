@@ -2,7 +2,8 @@
 #define PROXY_CONTEXT_H
 
 #include <string>
-#include <winsock2.h>
+#include <map>
+#include "Core/Platform.h"
 #include <openssl/ssl.h>
 
 namespace proxy {

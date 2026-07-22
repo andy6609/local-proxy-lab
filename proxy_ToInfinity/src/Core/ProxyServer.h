@@ -2,7 +2,7 @@
 #define PROXY_SERVER_H
 
 #include <atomic>
-#include <winsock2.h>
+#include "Core/Platform.h"
 
 namespace proxy {
 
